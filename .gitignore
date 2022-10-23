@@ -1,16 +1,24 @@
-# Node rules:
-## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-## Dependency directory
-## Commenting this out is preferred by some people, see
-## https://docs.npmjs.com/misc/faq#should-i-check-my-node_modules-folder-into-git
-node_modules
+# Test binary, built with `go test -c`
+*.test
 
-# Book build output
-_book
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
 
-# eBook build output
-*.epub
-*.mobi
-*.pdf
+# Dependency directories (remove the comment below to include it)
+# vendor/
+.idea/
+*.jpeg
+*.gif
+*.bmp
+*.ico
+
+*_local.*
+*.log
+*.log.*
