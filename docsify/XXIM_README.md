@@ -1,15 +1,11 @@
-# 北京惺惺科技有限公司
+# xxim
 
 <p align="center">
 <img align="center" width="150px" src="https://raw.githubusercontent.com/cherish-chat/xx-doc/master/docsify/images/xxim.jpg">
 </p>
 
-北京惺惺科技有限公司刚刚成立，专门从事互联网产品的研发，目前主要是做IM相关的产品，后续会有更多的产品上线。
-如果有定制化的需求，可以联系我们，我们会根据您的需求提供定制化的解决方案。
+xxim-server是一个功能超多的开箱即用的IM服务器。它的诞生是为了让每个人都能使用自己的IM APP，不需要再使用令人不爽的第三方IM APP。xxim-server是一个开源项目，欢迎大家一起来完善它。
 
-  > 技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广；软件开发；人工智能基础软件开发；人工智能应用软件开发；计算机系统服务；数据处理服务；广告发布；广告设计、代理；广告制作；市场调查（不含涉外调查）；企业形象策划；社会经济咨询服务；会议及展览服务；组织文化艺术交流活动；计算机软硬件及辅助设备零售。（除依法须经批准的项目外，凭营业执照依法自主开展经营活动）许可项目：互联网信息服务；网络文化经营。（依法须经批准的项目，经相关部门批准后方可开展经营活动，具体经营项目以相关部门批准文件或许可证件为准）（不得从事国家和本市产业政策禁止和限制类项目的经营活动。）
-
-# XXIM项目
 <div align=center>
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/cherish-chat/xxim-server)](https://goreportcard.com/report/github.com/cherish-chat/xxim-server)
