@@ -1,7 +1,7 @@
 # 北京惺惺科技有限公司
 
 <p align="center">
-<img align="center" width="150px" src="https://raw.githubusercontent.com/cherish-chat/xx-doc/master/docsify/images/xxim.jpg">
+<img align="center" width="150px" src="https://raw.githubusercontent.com/cherish-chat/xx-doc/master/docsify/images/xxim@3x.webp">
 </p>
 
 北京惺惺科技有限公司刚刚成立，专门从事互联网产品的研发，目前主要是做IM相关的产品，后续会有更多的产品上线。
