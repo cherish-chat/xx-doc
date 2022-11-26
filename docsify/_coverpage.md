@@ -1,8 +1,8 @@
 <p align="center">
 <img src="https://raw.githubusercontent.com/cherish-chat/xx-doc/master/docsify/images/xxim@3x.webp" width="200" height="200"/>
 </p>
-<h1 align="center">北京惺惺科技有限公司</h1>
+<h1 align="center">XXIM</h1>
 
-[公司团队介绍](#北京惺惺科技有限公司)
-[XXIM项目](https://github.com/cherish-chat/xxim-server)
+[项目介绍](#XXIM)
+[Github](https://github.com/cherish-chat/xxim-server.git)
 
