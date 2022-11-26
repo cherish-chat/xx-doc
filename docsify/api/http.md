@@ -9,14 +9,6 @@
 | 参数名 | 说明                                                 | 是否必须 | 默认值                    |
 | :--- |:---------------------------------------------------|:-----|:-----------------------|
 | Content-Type | 请求的数据类型                                            | 是    | application/x-protobuf |
-| Platform | 平台: ios,android,ipad,androidpad,windows,macos,wasm | 是    |                        |
-| DeviceId | 设备id                                               | 是    |                        |
-| UserId | 用户id                                               | 否    |                        |
-| Token | 用户token                                            | 否    |                        |
-| AppVersion | app版本号                                             | 否    |                        |
-| OsVersion | 系统版本号                                              | 否    |                        |
-| DeviceModel | 设备型号                                               | 否    |                        |
-| Language | 语言 | 否    | zh_CN                  |
 
 ### 1.1.2 请求方法和路径
 
@@ -25,22 +17,25 @@
 
 #### 1.1.3 请求体
 
-    请求体中的数据类型为`protobuf`，每一个接口定义的请求体都包含一个 requester 字段，用户不需要设置其中的值，只需要保证该字段的值不为null即可。
+    请求体中的数据类型为`protobuf`，需要传递 commonReq 的请求体，其中data字段传具体的protobuf。
 
 ```protobuf
-message Requester {
+message CommonReq {
   string id = 1;
   string token = 2;
-  string appVersion = 3;
-  string ip = 4;
 
-  // header
-  string ua = 5;
-  string osVersion = 6;
-  string platform = 7;
-  string deviceModel = 8;
-  string deviceId = 9;
-  string language = 10; // 系统语言：zh_CN en_US
+  string deviceModel = 11;
+  string deviceId = 12;
+  string osVersion = 13;
+  string platform = 14;
+
+  string appVersion = 21;
+  string language = 22;
+
+  bytes data = 31;
+
+  string ip = 41; // 不需要传递
+  string userAgent = 42; // 不需要传递
 }
 ```
 
@@ -66,8 +61,8 @@ message CommonResp {
 
     InternalError = 2; // 内部错误
     RequestError = 3;  // 请求错误
-    ToastError = 5;    // toast 错误 只有 message
-    AlertError = 7;    // alert 错误 只有一个确定按钮
+    ToastError = 5;    // toast 错误 只有 message；此时 msg 为错误信息
+    AlertError = 7;    // alert 错误 默认只有一个确定按钮；此时 msg 为 `{title: '标题', msg: '内容', actions: [{action: 0, title: '确定', jumpTo: ''}]}`
     RetryError = 8;    // alert 错误 有一个取消按钮 和一个重试按钮
   }
   Code code = 1;
@@ -321,6 +316,15 @@ message MsgDataList {
 ```
 
 ## 3. 接口
+
+### 3.0 特殊接口
+
+#### 3.0.1 authVerify: 验证token 
+
+- 请求地址：`/authVerify`
+- 请求体：
+- 返回体：
+
 
 ### 3.1 用户模块
 
@@ -802,5 +806,55 @@ message GetMsgListByConvIdReq {
 message GetMsgListResp {
   CommonResp commonResp = 1;
   repeated MsgData msgDataList = 2; // 如果是websocket推送的方式，这里是空的
+}
+```
+
+#### 3.4.3 getMsgById: 通过id获取消息
+
+- 请求地址：`/v1/msg/getMsgById`
+- 请求体：
+
+```protobuf
+message GetMsgByIdReq {
+  CommonReq commonReq = 1;
+  optional string serverMsgId = 2;
+  optional string clientMsgId = 3;
+  bool push = 4;
+}
+```
+
+- 响应体：
+
+```protobuf
+message GetMsgByIdResp {
+  CommonResp commonResp = 1;
+  MsgData msgData = 2;
+}
+```
+
+#### 3.4.4 batchGetConvSeq: 批量获取会话的消息seq
+
+- 请求地址：`/v1/msg/batchGetConvSeq`
+- 请求体：
+
+```protobuf
+message BatchGetConvSeqReq {
+  CommonReq commonReq = 1;
+  repeated string convIdList = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+message BatchGetConvSeqResp {
+  CommonResp commonResp = 1;
+  message ConvSeq {
+    string convId = 1;
+    string minSeq = 2;
+    string maxSeq = 3;
+    string updateTime = 4;
+  }
+  map<string, ConvSeq> convSeqMap = 2;
 }
 ```
