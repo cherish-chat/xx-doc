@@ -56,7 +56,7 @@ xxim-server代码不复杂，im大多逻辑都在于客户端，所以xxim-serve
 * 消息占用磁盘空间过大
 
 ## xxim-server 架构
-
+[![xxim-server](https://raw.githubusercontent.com/cherish-chat/xx-doc/master/docsify/images/XXIM微服务规划.svg)](https://raw.githubusercontent.com/cherish-chat/xx-doc/master/docsify/images/XXIM微服务规划.svg)
 
 ## 点点star! ⭐
 
