@@ -732,6 +732,54 @@ message GetFriendListResp {
 }
 ```
 
+#### 3.2.12 GetMyFriendEventList: 获取我的好友事件列表
+
+- 请求地址：`/v1/relation/getMyFriendEventList`
+- 请求体：
+
+```protobuf
+message GetMyFriendEventListReq {
+  CommonReq commonReq = 1;
+  // 分页
+  string pageIndex = 2; // 上次请求的pageIndex 第一次请求传空
+}
+```
+
+- 响应体：
+
+```protobuf
+enum RequestAddFriendStatus {
+  // 未处理
+  Unhandled = 0;
+  // 已同意
+  Agreed = 1;
+  // 已拒绝
+  Refused = 2;
+}
+message RequestAddFriendExtra {
+  string userId = 1;
+  string content = 2;
+}
+message FriendEvent {
+  // 发起人
+  string fromUserId = 1;
+  // 接收人
+  string toUserId = 2;
+  // 申请状态
+  RequestAddFriendStatus status = 3;
+  // 申请时间
+  string createTime = 4;
+  // 更新时间
+  string updateTime = 5;
+  // 附加信息
+  repeated RequestAddFriendExtra extra = 6;
+}
+message GetMyFriendEventListResp {
+  CommonResp commonResp = 1;
+  repeated FriendEvent friendNotifyList = 2;
+  string pageIndex = 3; // 下次请求的pageIndex
+}
+```
 ### 3.3 群组
 
 #### 3.3.1 CreateGroup: 创建群组
