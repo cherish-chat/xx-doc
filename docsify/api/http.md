@@ -96,22 +96,25 @@ message CommonResp {
 }
 ```
 
-#### 2.1.2 Requester: 请求消息体
+#### 2.1.2 CommonReq: 请求消息体
 
 ```protobuf
-message Requester {
-  string id = 1;
+message CommonReq {
+  string userId = 1;
   string token = 2;
-  string appVersion = 3;
-  string ip = 4;
 
-  // header
-  string ua = 5;
-  string osVersion = 6;
-  string platform = 7;
-  string deviceModel = 8;
-  string deviceId = 9;
-  string language = 10; // 系统语言：zh-CN en-US
+  string deviceModel = 11;
+  string deviceId = 12;
+  string osVersion = 13;
+  string platform = 14;
+
+  string appVersion = 21;
+  string language = 22;
+
+  bytes data = 31;
+
+  string ip = 41;
+  string userAgent = 42;
 }
 ```
 
