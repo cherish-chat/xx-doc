@@ -188,7 +188,6 @@ enum ContentType {
 ### 4.3 MsgData: 消息体
 
 ```protobuf
-
 message MsgData {
   message OfflinePush {
     string title = 1;
@@ -196,35 +195,30 @@ message MsgData {
     string payload = 3;
   }
   message Options {
-    // 是否需要离线推送
-    bool offlinePush = 1;
     // 服务端是否需要保存消息
-    bool storageForServer = 2;
+    bool storageForServer = 1;
     // 客户端是否需要保存消息
-    bool storageForClient = 3;
-    // 消息是否需要计入未读数
-    bool unreadCount = 4;
+    bool storageForClient = 2;
     // 是否需要解密 （端对端加密技术，服务端无法解密）
-    bool needDecrypt = 5;
+    bool needDecrypt = 3;
+    // 是否需要离线推送
+    bool offlinePush = 4;
     // 是否需要重新渲染会话
-    bool updateConv = 6;
-  }
-  message Receiver {
-    optional string userId = 1; // 单聊时为对方的userId
-    optional string groupId = 2; // 群聊时为群组id
+    bool updateConvMsg = 5;
+    // 消息是否需要计入未读数
+    bool updateUnreadCount = 6;
   }
   string clientMsgId = 1;
   string serverMsgId = 2;
   string clientTime = 3;
   string serverTime = 4;
 
-  string sender = 11; // 发送者id
-  string senderInfo = 12; // 发送者信息
-  string senderConvInfo = 13; // 发送者在会话中的信息
+  string senderId = 11; // 发送者id
+  bytes senderInfo = 12; // 发送者信息
+  bytes senderConvInfo = 13; // 发送者在会话中的信息
 
-  Receiver receiver = 21; // 接收者id (单聊时为对方id, 群聊时为群id)
-  string convId = 22; // 会话id
-  repeated string atUsers = 23;   // 强提醒用户id列表 用户不在线时，会收到离线推送，除非用户屏蔽了该会话 如果需要提醒所有人，可以传入"all"
+  string convId = 21; // 会话id (单聊时 single:user1-user2，群聊时 group:groupId，订阅号 sub:subId)
+  repeated string atUsers = 22;   // 强提醒用户id列表 用户不在线时，会收到离线推送，除非用户屏蔽了该会话 如果需要提醒所有人，可以传入"all"
 
   ContentType contentType = 31; // 消息内容类型
   bytes content = 32; // 消息内容

@@ -13,6 +13,7 @@
     * [http接口-关系](api/http_app_relation.md)
     * [http接口-群组](api/http_app_group.md)
     * [http接口-特殊](api/http_app_special.md)
+    * [关于convid函数](api/about_convid.md)
 
 * 联系我们
     * [联系我们](contact.md)
