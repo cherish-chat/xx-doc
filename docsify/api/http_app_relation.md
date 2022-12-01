@@ -126,105 +126,73 @@ message DeleteFriendResp {
 }
 ```
 
-## 7. SetSingleChatSetting: 设置单聊设置
+## 7. SetSingleConvSetting: 设置单聊设置
 
-- 请求地址：`/v1/relation/setSingleChatSetting`
+- 请求地址：`/v1/relation/setSingleConvSetting`
 - 请求体：
 
 ```protobuf
-message SetSingleChatSettingReq {
-  Requester requester = 1;
+message SingleConvSetting {
+  string convId = 1;
   string userId = 2;
-  // 置顶选项
-  optional bool top = 3;
-  // 单聊的备注
-  optional string remark = 4;
-  // 免打扰选项
-  optional bool disturb = 11;
+  // 设为置顶
+  optional bool isTop = 3;
+  // 设为免打扰
+  optional bool isDisturb = 4;
+  // 消息通知设置 （当免打扰时，此设置无效）
+  // 通知显示消息预览
+  optional bool notifyPreview = 5;
+  // 通知声音
+  optional bool notifySound = 6;
+  // 通知自定义声音
+  optional string notifyCustomSound = 7;
+  // 通知震动
+  optional bool notifyVibrate = 8;
+  // 屏蔽此人消息
+  optional bool isShield = 9;
+  // 聊天背景
+  optional string chatBg = 10;
+}
+
+//设置单聊设置
+message SetSingleConvSettingReq {
+  CommonReq commonReq = 1;
+  SingleConvSetting setting = 2;
 }
 ```
 
 - 响应体：
 
 ```protobuf
-message SetSingleChatSettingResp {
+message SetSingleConvSettingResp {
   CommonResp commonResp = 1;
 }
 ```
 
-## 8. GetSingleChatSetting: 获取单聊设置
+## 8. GetSingleConvSetting: 获取单聊设置
 
-- 请求地址：`/v1/relation/getSingleChatSetting`
+- 请求地址：`/v1/relation/getSingleConvSetting`
 - 请求体：
 
 ```protobuf
-message GetSingleChatSettingReq {
-  Requester requester = 1;
-  string userId = 2;
+//获取单聊设置
+message GetSingleConvSettingReq {
+  CommonReq commonReq = 1;
+  string convId = 2;
+  string userId = 3;
 }
 ```
 
 - 响应体：
 
 ```protobuf
-message GetSingleChatSettingResp {
+message GetSingleConvSettingResp {
   CommonResp commonResp = 1;
-  // 置顶选项
-  bool top = 2;
-  // 单聊的备注
-  string remark = 3;
-  // 免打扰选项
-  bool disturb = 4;
+  SingleConvSetting setting = 2;
 }
 ```
 
-## 9. SetSingleMsgNotifyOpt: 设置单聊消息通知选项
-
-- 请求地址：`/v1/relation/setSingleMsgNotifyOpt`
-- 请求体：
-
-```protobuf
-message SetSingleMsgNotifyOptReq {
-  Requester requester = 1;
-  // 群ID
-  string userId = 2;
-  // 消息通知类型
-  MsgNotifyOpt opt = 3;
-}
-```
-
-- 响应体：
-
-```protobuf
-message SetSingleMsgNotifyOptResp {
-  CommonResp commonResp = 1;
-}
-```
-
-## 10. GetSingleMsgNotifyOpt: 获取单聊消息通知选项
-
-- 请求地址：`/v1/relation/getSingleMsgNotifyOpt`
-- 请求体：
-
-```protobuf
-message GetSingleMsgNotifyOptReq {
-  Requester requester = 1;
-  // 群ID
-  string userId = 2;
-}
-```
-
-- 响应体：
-
-```protobuf
-message GetSingleMsgNotifyOptResp {
-  CommonResp commonResp = 1;
-  // 消息通知类型
-  MsgNotifyOpt opt = 2;
-}
-```
-
-## 11. GetFriendList: 获取好友列表
+## 9. GetFriendList: 获取好友列表
 
 - 请求地址：`/v1/relation/getFriendList`
 - 请求体：
@@ -252,7 +220,7 @@ message GetFriendListResp {
 }
 ```
 
-## 12. GetMyFriendEventList: 获取我的好友事件列表
+## 10. GetMyFriendEventList: 获取我的好友事件列表
 
 - 请求地址：`/v1/relation/getMyFriendEventList`
 - 请求体：
