@@ -23,17 +23,20 @@ message SendMsgListResp {
 }
 ```
 
-## 2. GetMsgListByConvId: 获取会话消息列表
+## 2. BatchGetMsgListByConvId: 批量获取会话消息列表
 
-- 请求地址：`/v1/msg/getMsgListByConvId`
+- 请求地址：`/v1/msg/batchGetMsgListByConvId`
 - 请求体：
 
 ```protobuf
-message GetMsgListByConvIdReq {
-  Requester requester = 1;
-  string convId = 2;
-  repeated string seqList = 3;
-  bool push = 4; // 是否使用websocket推送的方式
+message BatchGetMsgListByConvIdReq {
+  message Item {
+    string convId = 1;
+    repeated string seqList = 2;
+  }
+  CommonReq commonReq = 1;
+  repeated Item items = 2;
+  bool push = 3;
 }
 ```
 
