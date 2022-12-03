@@ -179,13 +179,8 @@ enum ContentType {
   MERGE = 18; // 合并
   EMOJI = 19; // 表情
   COMMAND = 20; // 命令
-
-  // 系统内消息
-  CONV_LIST_CHANGE = 51; // 拥有的会话列表变更 增加|删除  自己给自己发消息
-  PROFILE_CHANGE = 52;   // 个人资料变更 在线状态|昵称|头像   给好友发消息
-  CONV_INFO_CHANGE = 53; // 会话资料变更 群名称|群头像|群公告|群解散  给会话发消息
-  CONV_PROFILE_CHANGE = 54; // 会话内个人设置变更 消息通知|置顶|收入群助手    给会话发消息
-  CONV_MEMBER_CHANGE = 55; // 会话内成员变更 增加|删除|修改身份  给会话发消息
+  RICH_TXT = 21; // 富文本
+  MARKDOWN = 22; // markdown
 
   CUSTOM = 100; // 自定义消息
 }
@@ -219,19 +214,18 @@ message MsgData {
   string clientTime = 3;
   string serverTime = 4;
 
-  string senderId = 11; // 发送者id
-  bytes senderInfo = 12; // 发送者信息
-  bytes senderConvInfo = 13; // 发送者在会话中的信息
+  string senderId = 11;
+  bytes senderInfo = 12;
 
-  string convId = 21; // 会话id (单聊时 single:user1-user2，群聊时 group:groupId，订阅号 sub:subId)
-  repeated string atUsers = 22;   // 强提醒用户id列表 用户不在线时，会收到离线推送，除非用户屏蔽了该会话 如果需要提醒所有人，可以传入"all"
+  string convId = 21;
+  repeated string atUsers = 22;
 
-  ContentType contentType = 31; // 消息内容类型
-  bytes content = 32; // 消息内容
-  string seq = 33; // 消息序号 会话内唯一且递增
+  ContentType contentType = 31;
+  bytes content = 32;
+  string seq = 33;
 
-  Options options = 41; // 消息选项
-  OfflinePush offlinePush = 42; // 离线推送
+  Options options = 41;
+  OfflinePush offlinePush = 42;
 
   bytes ext = 100;
 }
@@ -242,5 +236,46 @@ message MsgData {
 ```protobuf
 message MsgDataList {
   repeated MsgData msgDataList = 1;
+}
+```
+
+### 4.5 NoticeData: 通知消息体
+
+```protobuf
+message NoticeData {
+  message Options {
+    // 客户端是否需要保存消息
+    bool storageForClient = 1;
+    // 是否需要重新渲染会话
+    bool updateConvMsg = 2;
+    // 只推送在线用户一次
+    bool onlinePushOnce = 3;
+  }
+  // 会话信息
+  string convId = 1; // 会话id (notice:$noticeId)
+  int32 unreadCount = 2; // 会话未读数
+  // 未读数量是绝对值还是增量
+  bool unreadAbsolute = 3;
+
+  // 消息信息
+  string noticeId = 11;
+  string createTime = 12;
+  string title = 13; // 消息标题(显示在会话列表)
+  int32 contentType = 14; // 通知数据类型
+  bytes content = 15; // 消息数据
+
+  // 附加信息
+  Options options = 21; // 通知选项
+
+  // 扩展信息
+  bytes ext = 31; // 扩展字段
+}
+```
+
+### 4.6 NoticeDataList: 通知消息列表
+
+```protobuf
+message NoticeDataList {
+  repeated NoticeData noticeDataList = 1;
 }
 ```

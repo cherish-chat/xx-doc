@@ -8,6 +8,7 @@
     * [http请求和响应](api/http_request_response.md)
     * [http通用模型](api/http_common.md)
     * [http接口-消息](api/http_app_msg.md)
+    * [http接口-通知](api/http_app_notice.md)
     * [http接口-IM](api/http_app_im.md)
     * [http接口-用户](api/http_app_user.md)
     * [http接口-关系](api/http_app_relation.md)
