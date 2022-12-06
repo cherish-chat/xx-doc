@@ -11,7 +11,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/cherish-chat/xxim-server.svg)](https://pkg.go.dev/github.com/cherish-chat/xxim-server)
 [![Awesome Go](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![XXIM](https://api.cherish.chat/shields/group:discussion)](https://www.cherish.chat)
+[![XXIM](https://api.cherish.chat/shields/group:discussion)](https://xxim.cherish.chat)
 
 </div>
 
