@@ -4,7 +4,7 @@
 
 ### 路径以及参数
 
-- 路径：/ws?token=${token}&userId=${userId}&networkUsed=${networkUsed}&platform=${platform}&deviceId=${deviceId}
+- 路径：/ws?token=${token}&userId=${userId}&networkUsed=${networkUsed}&platform=${platform}&deviceId=${deviceId}&deviceModel=${deviceModel}&appVersion=${appVersion}&language=${language}
 - 参数：
 
 | 参数名         | 类型     | 是否必须 | 说明      | 示例          |
@@ -14,6 +14,10 @@
 | networkUsed | string | 是    | 网络类型    | wifi        |
 | platform    | string | 是    | 平台类型    | ios         |
 | deviceId    | string | 是    | 设备id    | xxx-xxx-xxx |
+| deviceModel | string | 是    | 设备型号    | iphone 6    |
+| osVersion   | string | 是    | 系统版本    | 10.3.1      |
+| appVersion  | string | 是    | app版本   | 1.0.0       |
+| language    | string | 是    | 语言      | zh          |
 
 ### 连接说明
 
@@ -59,6 +63,7 @@ message RequestBody {
 > 说明：客户端发送的消息体，其中 `event` 表示事件类型，`reqId` 表示请求id，`data` 表示请求数据。
 
 #### RequestBody说明
+
 - event: 事件类型
 - reqId: 请求id，用于标识请求，服务端会原样返回
 - data: 请求数据
@@ -66,6 +71,7 @@ message RequestBody {
 #### RequestBody.data说明
 
 ##### SendMsgList
+
 ```protobuf
 message SendMsgListReq {
   CommonReq commonReq = 1;
@@ -77,6 +83,7 @@ message SendMsgListReq {
 ```
 
 ##### SyncConvSeq
+
 ```protobuf
 message BatchGetConvSeqReq {
   CommonReq commonReq = 1;
@@ -85,6 +92,7 @@ message BatchGetConvSeqReq {
 ```
 
 ##### SyncMsgList
+
 ```protobuf
 message BatchGetMsgListByConvIdReq {
   message Item {
@@ -98,6 +106,7 @@ message BatchGetMsgListByConvIdReq {
 ```
 
 ##### AckNotice
+
 ```protobuf
 message AckNoticeDataReq {
   CommonReq commonReq = 1;
@@ -106,6 +115,7 @@ message AckNoticeDataReq {
 ```
 
 ##### GetMsgById
+
 ```protobuf
 message GetMsgByIdReq {
   CommonReq commonReq = 1;
@@ -153,6 +163,7 @@ message ResponseBody {
 #### ResponseBody.data说明
 
 ##### SendMsgList
+
 ```protobuf
 message SendMsgListResp {
   CommonResp commonResp = 1;
@@ -160,6 +171,7 @@ message SendMsgListResp {
 ```
 
 ##### SyncConvSeq
+
 ```protobuf
 message BatchGetConvSeqResp {
   CommonResp commonResp = 1;
@@ -174,6 +186,7 @@ message BatchGetConvSeqResp {
 ```
 
 ##### SyncMsgList
+
 ```protobuf
 message GetMsgListResp {
   CommonResp commonResp = 1;
@@ -182,6 +195,7 @@ message GetMsgListResp {
 ```
 
 ##### AckNotice
+
 ```protobuf
 message AckNoticeDataResp {
   CommonResp commonResp = 1;
@@ -189,6 +203,7 @@ message AckNoticeDataResp {
 ```
 
 ##### GetMsgById
+
 ```protobuf
 message GetMsgByIdResp {
   CommonResp commonResp = 1;
