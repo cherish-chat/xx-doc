@@ -37,9 +37,8 @@
 ### 请求
 
 ```protobuf
-
 // 客户端发送事件
-enum RequestEvent {
+enum ActiveEvent {
   // 发送消息
   SendMsgList = 0;
   // 批量获取会话的消息seq
@@ -54,7 +53,7 @@ enum RequestEvent {
 
 // 客户端发送的消息体
 message RequestBody {
-  RequestEvent event = 1;
+  ActiveEvent event = 1;
   string reqId = 2;
   bytes data = 3;
 }
@@ -74,7 +73,6 @@ message RequestBody {
 
 ```protobuf
 message SendMsgListReq {
-  CommonReq commonReq = 1;
   repeated MsgData msgDataList = 2;
   // options
   // 1. 延迟时间（秒） 不得大于 864000秒 也就是10天
@@ -86,7 +84,6 @@ message SendMsgListReq {
 
 ```protobuf
 message BatchGetConvSeqReq {
-  CommonReq commonReq = 1;
   repeated string convIdList = 2;
 }
 ```
@@ -99,7 +96,6 @@ message BatchGetMsgListByConvIdReq {
     string convId = 1;
     repeated string seqList = 2;
   }
-  CommonReq commonReq = 1;
   repeated Item items = 2;
   bool push = 3;
 }
@@ -109,7 +105,6 @@ message BatchGetMsgListByConvIdReq {
 
 ```protobuf
 message AckNoticeDataReq {
-  CommonReq commonReq = 1;
   repeated string noticeIds = 2;
 }
 ```
@@ -118,7 +113,6 @@ message AckNoticeDataReq {
 
 ```protobuf
 message GetMsgByIdReq {
-  CommonReq commonReq = 1;
   optional string serverMsgId = 2;
   optional string clientMsgId = 3;
   bool push = 4;
@@ -135,7 +129,7 @@ enum PushEvent {
   // 通知推送
   PushNoticeDataList = 1;
   // 响应返回
-  ReturnResponse = 2;
+  PushResponseBody = 2;
 }
 
 message PushBody {
@@ -145,9 +139,21 @@ message PushBody {
 
 // 服务端返回响应的消息体
 message ResponseBody {
-  RequestEvent event = 1;
+  enum Code {
+    Success = 0;
+
+    UnknownError = 1;
+    InternalError = 2;
+    RequestError = 3;
+    AuthError = 4;
+    ToastError = 5;
+    AlertError = 7;
+    RetryError = 8;
+  }
+  ActiveEvent event = 1;
   string reqId = 2;
-  bytes data = 3;
+  Code code = 3;
+  bytes data = 4;
 }
 ```
 
@@ -157,7 +163,7 @@ message ResponseBody {
 
 - event：请求事件类型
 - reqId：请求id
-- code：响应码，CommonResp_Code
+- code：响应码
 - data：响应数据
 
 #### ResponseBody.data说明
@@ -165,16 +171,13 @@ message ResponseBody {
 ##### SendMsgList
 
 ```protobuf
-message SendMsgListResp {
-  CommonResp commonResp = 1;
-}
+message SendMsgListResp {}
 ```
 
 ##### SyncConvSeq
 
 ```protobuf
 message BatchGetConvSeqResp {
-  CommonResp commonResp = 1;
   message ConvSeq {
     string convId = 1;
     string minSeq = 2;
@@ -189,7 +192,6 @@ message BatchGetConvSeqResp {
 
 ```protobuf
 message GetMsgListResp {
-  CommonResp commonResp = 1;
   repeated MsgData msgDataList = 2;
 }
 ```
@@ -197,16 +199,13 @@ message GetMsgListResp {
 ##### AckNotice
 
 ```protobuf
-message AckNoticeDataResp {
-  CommonResp commonResp = 1;
-}
+message AckNoticeDataResp {}
 ```
 
 ##### GetMsgById
 
 ```protobuf
 message GetMsgByIdResp {
-  CommonResp commonResp = 1;
   MsgData msgData = 2;
 }
 ```
