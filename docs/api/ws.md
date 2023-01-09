@@ -137,8 +137,7 @@ message PushBody {
 message ResponseBody {
   RequestEvent event = 1;
   string reqId = 2;
-  int32 code = 3;
-  bytes data = 4;
+  bytes data = 3;
 }
 ```
 
