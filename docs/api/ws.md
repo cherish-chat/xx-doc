@@ -21,8 +21,11 @@
 
 ### 连接说明
 
-    连接失败后，请首先先查是否是网络原因。其次检查token是否有效。
     连接成功后，服务端会发送一条 `text` 类型消息，内容为 `connected`，表示连接成功。
+
+    socket关闭原因: 
+        - code=3000 表示认证失败 客户端应跳转到登录页面  msg=错误信息
+
 
 ### 部署说明
 
@@ -49,6 +52,8 @@ enum ActiveEvent {
   AckNotice = 3;
   // 获取一条消息
   GetMsgById = 4;
+  // 自定义请求
+  CustomRequest = 100;
 }
 
 // 客户端发送的消息体
@@ -97,15 +102,16 @@ message BatchGetMsgListByConvIdReq {
     repeated string seqList = 2;
   }
   repeated Item items = 2;
-  bool push = 3;
 }
 ```
 
 ##### AckNotice
 
 ```protobuf
+//AckNoticeDataReq 确认通知数据
 message AckNoticeDataReq {
-  repeated string noticeIds = 2;
+  string noticeId = 2;
+  string convId = 3;
 }
 ```
 
@@ -115,7 +121,15 @@ message AckNoticeDataReq {
 message GetMsgByIdReq {
   optional string serverMsgId = 2;
   optional string clientMsgId = 3;
-  bool push = 4;
+}
+```
+
+##### CustomRequest
+
+```protobuf
+message CustomRequestBody {
+  string method = 1; // 类似于http的url
+  bytes data = 2; // 类似于http的请求body
 }
 ```
 
@@ -208,4 +222,10 @@ message AckNoticeDataResp {}
 message GetMsgByIdResp {
   MsgData msgData = 2;
 }
+```
+
+##### CustomRequest
+
+```protobuf
+// 根据method不同，data的结构也不同 具体应该查询 api 文档
 ```
