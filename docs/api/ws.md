@@ -77,6 +77,7 @@ message RequestBody {
 ##### SendMsgList
 
 ```protobuf
+// 发送消息请求 可批量
 message SendMsgListReq {
   repeated MsgData msgDataList = 2;
   // options
@@ -88,6 +89,7 @@ message SendMsgListReq {
 ##### SyncConvSeq
 
 ```protobuf
+// 同步会话消息seq
 message BatchGetConvSeqReq {
   repeated string convIdList = 2;
 }
@@ -96,6 +98,7 @@ message BatchGetConvSeqReq {
 ##### SyncMsgList
 
 ```protobuf
+// 同步消息
 message BatchGetMsgListByConvIdReq {
   message Item {
     string convId = 1;
@@ -108,7 +111,7 @@ message BatchGetMsgListByConvIdReq {
 ##### AckNotice
 
 ```protobuf
-//AckNoticeDataReq 确认通知数据
+//AckNoticeDataReq 确认通知数据 如果不确认 服务端会一直推送 直到客户端消费成功
 message AckNoticeDataReq {
   string noticeId = 2;
   string convId = 3;
@@ -118,6 +121,7 @@ message AckNoticeDataReq {
 ##### GetMsgById
 
 ```protobuf
+// 获取一条消息
 message GetMsgByIdReq {
   optional string serverMsgId = 2;
   optional string clientMsgId = 3;
@@ -127,6 +131,7 @@ message GetMsgByIdReq {
 ##### CustomRequest
 
 ```protobuf
+// 自定义请求
 message CustomRequestBody {
   string method = 1; // 类似于http的url
   bytes data = 2; // 类似于http的请求body
@@ -171,7 +176,7 @@ message ResponseBody {
 }
 ```
 
-> 说明：服务端返回的消息体，其中 `event` 固定为 `ReturnResponse`，`data` 固定为 `ResponseBody` 的序列化数据。
+> 说明：服务端返回的消息体，其中 `event` 固定为 `PushResponseBody`，`data` 固定为 `ResponseBody` 的序列化数据。
 
 #### ResponseBody说明
 
@@ -191,6 +196,7 @@ message SendMsgListResp {}
 ##### SyncConvSeq
 
 ```protobuf
+// 同步会话消息seq
 message BatchGetConvSeqResp {
   message ConvSeq {
     string convId = 1;
@@ -205,6 +211,7 @@ message BatchGetConvSeqResp {
 ##### SyncMsgList
 
 ```protobuf
+// 同步消息
 message GetMsgListResp {
   repeated MsgData msgDataList = 2;
 }
@@ -219,6 +226,7 @@ message AckNoticeDataResp {}
 ##### GetMsgById
 
 ```protobuf
+// 获取一条消息
 message GetMsgByIdResp {
   MsgData msgData = 2;
 }
