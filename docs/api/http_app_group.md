@@ -26,3 +26,53 @@ message CreateGroupResp {
   optional string groupId = 2;
 }
 ```
+
+## 2. GetMyGroupList: 获取我的群组列表
+
+- 请求地址：`/v1/group/getMyGroupList`
+- 请求体：
+
+```protobuf
+//GetMyGroupListReq 获取我的群聊列表
+message GetMyGroupListReq {
+  CommonReq commonReq = 1;
+  // 分页
+  Page page = 2;
+  // 过滤
+  message Filter {
+    // 消息接收类型
+    // 是否过滤掉群助手
+    bool filterFold = 1;
+    // 是否过滤已屏蔽的群
+    bool filterShield = 2;
+  }
+  Filter filter = 3;
+  enum Opt {
+    // 默认
+    DEFAULT = 0;
+    // 只获取id
+    ONLY_ID = 1;
+  }
+  // 获取选项
+  Opt opt = 10;
+}
+```
+
+- 响应体：
+
+```protobuf
+message GroupBaseInfo {
+  string id = 1;
+  string name = 2;
+  string avatar = 3;
+}
+
+//GetMyGroupListResp 获取我的群聊列表
+message GetMyGroupListResp {
+  CommonResp commonResp = 1;
+  // 群聊列表
+  map<string, GroupBaseInfo> groupMap = 2;
+  // ids
+  repeated string ids = 3;
+}
+```
