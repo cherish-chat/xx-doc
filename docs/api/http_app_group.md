@@ -76,3 +76,88 @@ message GetMyGroupListResp {
   repeated string ids = 3;
 }
 ```
+
+## 3. SetGroupMemberInfo: 设置群成员信息
+
+- 请求地址：`/v1/group/setGroupMemberInfo`
+
+- 请求体：
+
+```protobuf
+//SetGroupMemberInfoReq 设置群成员信息
+message SetGroupMemberInfoReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  string memberId = 3;
+  // notice content 群里所有人都能收到的notice中的content
+  string notice = 4;
+  // 群备注
+  optional string remark = 11;
+  // 群角色
+  optional GroupRole role = 12;
+  // 解除禁言时间
+  optional int64 unbanTime = 13;
+  // 群备注
+  optional string groupRemark = 14;
+}
+```
+
+- 响应体：
+
+```protobuf
+//SetGroupMemberInfoResp 设置群成员信息
+message SetGroupMemberInfoResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 4. GetGroupMemberInfo: 获取群成员信息
+
+- 请求地址：`/v1/group/getGroupMemberInfo`
+
+- 请求体：
+
+```protobuf
+//GetGroupMemberInfoReq 获取群成员信息
+message GetGroupMemberInfoReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  string memberId = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+message GroupMemberInfo {
+  // 群id
+  string groupId = 1;
+  // 群成员id
+  string memberId = 2;
+  // 群内显示的昵称
+  string remark = 3;
+  // 群聊的备注
+  string groupRemark = 4;
+  // 置顶选项
+  bool top = 5;
+  // 免打扰选项
+  bool disturb = 6;
+  // 免打扰选项更多设置
+  GroupDisturbOpt disturbMore = 7;
+  // 聊天背景图
+  string chatBg = 8;
+  // 群角色
+  GroupRole role = 9;
+}
+
+//GetGroupMemberInfoResp 获取群成员信息
+message GetGroupMemberInfoResp {
+  CommonResp commonResp = 1;
+  // 群成员信息
+  GroupMemberInfo groupMemberInfo = 2;
+}
+```

@@ -65,7 +65,7 @@ message NoticeData {
 - notice:SyncFriendList (同步好友列表通知, B同意添加A为好友, A会收到通知)
 
 - notice:group@${groupId} (群组通知, 比如群信息改变、群成员改变、群通知更新等)
-  > noticeId: UpdateGroupInfo、UpdateGroupMember、UpdateGroupNotice
+  > noticeId: CreateGroup、UpdateGroupInfo、UpdateMemberInfo@${memberId}、UpdateGroupNotice
 
 - notice:user@${userId} (用户通知, 比如用户信息改变、用户发布朋友圈、用户在线状态变更等)
   > noticeId: UpdateUserInfo、UpdateUserPost、UpdateUserStatus 
