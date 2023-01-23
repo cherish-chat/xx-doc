@@ -94,3 +94,27 @@ message SetUserParamsReq {
 
 message SetUserParamsResp {}
 ```
+
+### 4. 进行业务请求
+
+发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为http api文档中的path，`data`为文档中的请求数据的序列化数据
+
+> 需要注意的是，data中CommonReq不需要传递，此参数为服务端专用参数，客户端不需要传递 
+
+#### 示例1. 发送消息
+
+> 根据http api中msg文档，发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/msg/sendMsgList`，`data`为`SendMsgListReq`的序列化数据
+
+```protobuf
+message SendMsgListReq {
+  CommonReq commonReq = 1;
+  repeated MsgData msgDataList = 2;
+  // options
+  //  延迟时间（秒） 不得大于 864000秒 也就是10天 只有开启了Pulsar的延迟消息功能才有效
+  optional int32 deliverAfter = 11;
+}
+
+message SendMsgListResp {
+  CommonResp commonResp = 1;
+}
+```
