@@ -81,7 +81,7 @@ message SetCxnParamsReq {
 message SetCxnParamsResp {}
 ```
 
-### 3. 设置用户参数
+### 4. 设置用户参数
 
 > 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/conn/setUserParams`，`data`为`SetUserParamsReq`的序列化数据
 
@@ -95,7 +95,7 @@ message SetUserParamsReq {
 message SetUserParamsResp {}
 ```
 
-### 4. 进行业务请求
+### 5. 进行业务请求
 
 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为http api文档中的path，`data`为文档中的请求数据的序列化数据
 
