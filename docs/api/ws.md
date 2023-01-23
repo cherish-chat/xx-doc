@@ -61,7 +61,7 @@ message ResponseBody {
 
 ### 3. 设置连接参数
 
-> 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/conn/setCxnParams`，`data`为`SetCxnParamsReq`的序列化数据
+> 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/conn/white/setCxnParams`，`data`为`SetCxnParamsReq`的序列化数据
 
 ```protobuf
 message CxnParams {
@@ -83,7 +83,7 @@ message SetCxnParamsResp {}
 
 ### 4. 设置用户参数
 
-> 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/conn/setUserParams`，`data`为`SetUserParamsReq`的序列化数据
+> 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/conn/white/setUserParams`，`data`为`SetUserParamsReq`的序列化数据
 
 ```protobuf
 message SetUserParamsReq {
