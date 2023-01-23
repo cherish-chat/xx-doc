@@ -227,7 +227,7 @@ message MsgData {
   Options options = 41;
   OfflinePush offlinePush = 42;
 
-  bytes ext = 100;
+  bytes ext = 101;
 }
 ```
 

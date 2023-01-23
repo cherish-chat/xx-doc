@@ -64,7 +64,7 @@ message ResponseBody {
 > 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为`/v1/conn/white/setCxnParams`，`data`为`SetCxnParamsReq`的序列化数据
 
 ```protobuf
-message CxnParams {
+message SetCxnParamsReq {
   string platform = 1;
   string deviceId = 2;
   string deviceModel = 3;
@@ -72,10 +72,7 @@ message CxnParams {
   string appVersion = 5;
   string language = 6;
   string networkUsed = 7;
-  bytes ex = 11;
-}
-message SetCxnParamsReq {
-  CxnParams cxnParams = 1;
+  bytes ext = 11;
 }
 
 message SetCxnParamsResp {}
@@ -89,7 +86,7 @@ message SetCxnParamsResp {}
 message SetUserParamsReq {
   string userId = 1;
   string token = 2;
-  bytes ex = 11;
+  bytes ext = 11;
 }
 
 message SetUserParamsResp {}
@@ -107,14 +104,11 @@ message SetUserParamsResp {}
 
 ```protobuf
 message SendMsgListReq {
-  CommonReq commonReq = 1;
-  repeated MsgData msgDataList = 2;
+  repeated MsgData msgDataList = 1;
   // options
   //  延迟时间（秒） 不得大于 864000秒 也就是10天 只有开启了Pulsar的延迟消息功能才有效
-  optional int32 deliverAfter = 11;
+  optional int32 deliverAfter = 2;
 }
 
-message SendMsgListResp {
-  CommonResp commonResp = 1;
-}
+message SendMsgListResp {}
 ```

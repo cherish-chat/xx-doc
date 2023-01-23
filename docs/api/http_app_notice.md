@@ -8,18 +8,15 @@
 ```protobuf
 //AckNoticeDataReq 确认通知数据
 message AckNoticeDataReq {
-  CommonReq commonReq = 1;
+  string convId = 1;
   string noticeId = 2;
-  bool success = 3; // 是否消费成功
 }
 ```
 
 - 响应体：
 
 ```protobuf
-message AckNoticeDataResp {
-  CommonResp commonResp = 1;
-}
+message AckNoticeDataResp {}
 ```
 
 ## 2. 服务端推送通知都有什么
@@ -52,7 +49,7 @@ message NoticeData {
   Options options = 21; // 通知选项
 
   // 扩展信息
-  bytes ext = 31; // 扩展字段
+  bytes ext = 101; // 扩展字段
 }
 ```
 
