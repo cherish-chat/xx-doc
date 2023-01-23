@@ -2,7 +2,7 @@
 
 ## 1. SendMsg: 发送消息
 
-- 请求地址：`/v1/msg/sendMsg`
+- 请求地址：`/v1/msg/sendMsgList`
 - 请求体：
 
 ```protobuf
