@@ -29,14 +29,9 @@ message NoticeData {
     bool storageForClient = 1;
     // 是否需要重新渲染会话
     bool updateConvMsg = 2;
-    // 只推送在线用户一次
-    bool onlinePushOnce = 3;
   }
   // 会话信息
   string convId = 1; // 会话id (notice:$noticeId)
-  int32 unreadCount = 2; // 会话未读数
-  // 未读数量是绝对值还是增量
-  bool unreadAbsolute = 3;
 
   // 消息信息
   string noticeId = 11;
@@ -53,16 +48,95 @@ message NoticeData {
 }
 ```
 
-### convId 解释
+### convId
 
-- notice:FriendNotice (好友通知, 用户A请求加好友B时, B会收到通知)
+- command: 表示是命令消息
+- friendMember: 表示是好友成员通知
+- groupMember: 表示是群成员通知
+- `friend@`为前缀: 表示是好友通知
+- `group@`为前缀: 表示是群通知
 
-- notice:GroupNotice (群组通知, 用户A请求加群B时, B群主/管理员会收到通知)
+### contentType
 
-- notice:SyncFriendList (同步好友列表通知, B同意添加A为好友, A会收到通知)
+```dart
+class NoticeContentType {
+  // command
+  static const int syncFriendList = 101; // 同步好友列表
 
-- notice:group@${groupId} (群组通知, 比如群信息改变、群成员改变、群通知更新等)
-  > noticeId: JoinedGroup、UpdateGroupInfo、UpdateGroupNotice、...
+  // friend@
+  static const int updateUserInfo = 201; // 好友更新了用户信息
 
-- notice:user@${userId} (用户通知, 比如用户信息改变、用户发布朋友圈、用户在线状态变更等)
-  > noticeId: UpdateUserInfo、UpdateUserPost、UpdateUserStatus 
+  // group@
+  static const int groupMemberLeave = 301; // 群成员离开
+  static const int createGroup = 302; // 创建群
+  static const int newGroupMember = 303; // 新成员加入
+  static const int dismissGroup = 304; // 解散群
+  static const int setGroupMemberInfo = 305; // 设置群成员信息
+
+  // groupMember
+  static const int applyToBeGroupMember = 401; // 申请加入群 
+}
+```
+
+### 示例
+
+#### 1. dart
+
+```dart
+class NoticeConvId {
+  static const String command = 'command';
+  static const String friendMember = 'friendMember';
+  static const String groupMember = 'groupMember';
+  static const String friendPrefix = "friend@";
+  static const String groupPrefix = "group@";
+}
+
+class NoticeContentType {
+  // command
+  static const int syncFriendList = 101;
+
+  // friend@
+  static const int updateUserInfo = 201;
+
+  // group@
+  static const int groupMemberLeave = 301;
+  static const int createGroup = 302;
+  static const int newGroupMember = 303;
+  static const int dismissGroup = 304;
+  static const int setGroupMemberInfo = 305;
+
+  // groupMember
+  static const int applyToBeGroupMember = 401;
+}
+
+class NoticeLogic implements ImToolWorker {
+  Future<bool> onReceive(NoticeModel notice) async {
+    final convId = receiverNid(notice.convId);
+    switch (convId) {
+      case NoticeConvId.command:
+        return await _onCommand(convId, notice);
+      case NoticeConvId.friendMember:
+        return await _onFriendMember(convId, notice);
+      case NoticeConvId.groupMember:
+        return await _onGroupMember(convId, notice);
+      default:
+        if (convId.startsWith(NoticeConvId.friendPrefix)) {
+          // 好友
+          String friendId = convId.substring(NoticeConvId.friendPrefix.length);
+          return await _onFriendNotice(friendId, notice);
+        } else if (convId.startsWith(NoticeConvId.groupPrefix)) {
+          // 群组
+          String groupId = convId.substring(NoticeConvId.groupPrefix.length);
+          return await _onGroupNotice(groupId, notice);
+        } else {
+          // 其他
+          // 打印notice内容
+          printInfo(
+              info:
+                  'onReceive notice.content: ${notice.content}, notice.contentType: ${notice.contentType}, notice.convId: ${notice.convId}');
+        }
+    }
+    return true;
+  }
+}
+```
