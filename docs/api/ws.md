@@ -66,14 +66,15 @@ message ResponseBody {
 
 ```protobuf
 message SetCxnParamsReq {
-  string platform = 1;
-  string deviceId = 2;
-  string deviceModel = 3;
-  string osVersion = 4;
-  string appVersion = 5;
-  string language = 6;
-  string networkUsed = 7;
-  bytes ext = 11;
+  string packageId = 1; // 客户端包id 每次安装都会变化
+  string platform = 2; // 客户端平台 ios/android/web/macos/windows/linux
+  string deviceId = 3; // 客户端设备id
+  string deviceModel = 4; // 客户端设备型号
+  string osVersion = 5; // 客户端系统版本
+  string appVersion = 6; // 客户端app版本
+  string language = 7; // 客户端语言
+  string networkUsed = 8; // 客户端网络类型
+  bytes ext = 11; // 扩展字段
 }
 
 message SetCxnParamsResp {}
