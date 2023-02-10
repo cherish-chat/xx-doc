@@ -1,8 +1,24 @@
-# websocket gateway
+# tcp gateway
 
 ## 长连接请求和响应协议
 
-### 请求
+### tcp请求
+
+| 字段      | 长度  | 类型     | 说明                 |
+|---------|-----|--------|--------------------|
+| dataLen | 4   | uint32 | 表示变长data的长度        |
+| reqId   | 4   | uint32 | 1表示text; 2表示binary |
+| data    | 变长  | bytes  | 请求数据               |
+
+### tcp响应
+
+| 字段      | 长度  | 类型     | 说明                 |
+|---------|-----|--------|--------------------|
+| dataLen | 4   | uint32 | 表示变长data的长度        |
+| reqId   | 4   | uint32 | 1表示text; 2表示binary |
+| data    | 变长  | bytes  | 请求数据               |
+
+### 业务请求
 
 ```protobuf
 // 客户端发送的消息体
@@ -13,7 +29,7 @@ message RequestBody {
 }
 ```
 
-### 响应
+### 业务响应
 
 ```protobuf
 enum PushEvent {
@@ -53,7 +69,7 @@ message ResponseBody {
 
 ### 1. 连接
 
-> 客户端连接websocket，url为`ws[s]://<host>:<port>/ws`
+> 客户端连接tcp，`<host>:<port>`
 
 ### 2. 服务端返回
 
@@ -66,14 +82,15 @@ message ResponseBody {
 
 ```protobuf
 message SetCxnParamsReq {
-  string platform = 1;
-  string deviceId = 2;
-  string deviceModel = 3;
-  string osVersion = 4;
-  string appVersion = 5;
-  string language = 6;
-  string networkUsed = 7;
-  bytes ext = 11;
+  string packageId = 1; // 客户端包id 每次安装都会变化
+  string platform = 2; // 客户端平台 ios/android/web/macos/windows/linux
+  string deviceId = 3; // 客户端设备id
+  string deviceModel = 4; // 客户端设备型号
+  string osVersion = 5; // 客户端系统版本
+  string appVersion = 6; // 客户端app版本
+  string language = 7; // 客户端语言
+  string networkUsed = 8; // 客户端网络类型
+  bytes ext = 11; // 扩展字段
 }
 
 message SetCxnParamsResp {}
@@ -122,47 +139,105 @@ message SendMsgListResp {}
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
 	"errors"
+	"github.com/aceld/zinx/znet"
 	"github.com/cherish-chat/xxim-server/common/pb"
 	"github.com/cherish-chat/xxim-server/common/utils"
 	"github.com/cherish-chat/xxim-server/common/xorm"
 	"github.com/zeromicro/go-zero/core/mr"
 	"google.golang.org/protobuf/proto"
 	"log"
-	"nhooyr.io/websocket"
+	"net"
 	"strconv"
 	"sync"
 	"time"
 )
 
-var ctx = context.Background()
+var tmpData = make([]byte, 0)
+
+func pack(msg *znet.Message) ([]byte, error) {
+	//创建一个存放bytes字节的缓冲
+	dataBuff := bytes.NewBuffer([]byte{})
+
+	//写dataLen
+	if err := binary.Write(dataBuff, binary.LittleEndian, msg.GetDataLen()); err != nil {
+		return nil, err
+	}
+
+	//写msgID
+	if err := binary.Write(dataBuff, binary.LittleEndian, msg.GetMsgID()); err != nil {
+		return nil, err
+	}
+
+	//写data数据
+	if err := binary.Write(dataBuff, binary.LittleEndian, msg.GetData()); err != nil {
+		return nil, err
+	}
+	return dataBuff.Bytes(), nil
+}
+
+func unpack(buff []byte) *znet.Message {
+	tmpData = append(tmpData, buff...)
+	if len(tmpData) < 8 {
+		return nil
+	}
+	//创建一个从输入二进制数据的ioReader
+	dataBuff := bytes.NewReader(tmpData)
+
+	//只解压head信息，得到dataLen和msgID
+	msg := &znet.Message{}
+	if err := binary.Read(dataBuff, binary.LittleEndian, &msg.DataLen); err != nil {
+		return nil
+	}
+
+	if err := binary.Read(dataBuff, binary.LittleEndian, &msg.ID); err != nil {
+		return nil
+	}
+
+	if int(msg.DataLen)+8 > len(tmpData) {
+		return nil
+	}
+
+	//解压data数据
+	msg.Data = make([]byte, msg.DataLen)
+	if err := binary.Read(dataBuff, binary.LittleEndian, msg.Data); err != nil {
+		return nil
+	}
+
+	tmpData = tmpData[8+msg.DataLen:]
+	return msg
+}
+
 var respMap sync.Map
 
-func url(path string) string { return "wss://api.cherish.chat" + path }
-
-func Connect() *websocket.Conn {
-	conn, response, err := websocket.Dial(ctx, url("/ws"), nil)
+func Connect() net.Conn {
+	conn, err := net.Dial("tcp", "api.cherish.chat:8999")
 	if err != nil {
 		log.Fatalf("failed to dial: %v", err)
 	}
-	// 打印响应头
-	log.Printf("response.Header: %v", response.Header)
-	// 打印响应状态码
-	log.Printf("response.StatusCode: %v", response.StatusCode)
 	// 返回conn
 	go loopRead(conn)
 	return conn
 }
 
-func loopRead(conn *websocket.Conn) {
+func loopRead(conn net.Conn) {
 	for {
-		_, data, err := conn.Read(ctx)
+		// 接收最大1024字节的数据
+		var readBuff = make([]byte, 1024)
+		n, err := conn.Read(readBuff)
 		if err != nil {
 			log.Fatalf("failed to read: %v", err)
 		}
+		readBuff = readBuff[:n]
+		message := unpack(readBuff)
+		if message == nil {
+			continue
+		}
 		pushBody := &pb.PushBody{}
-		_ = proto.Unmarshal(data, pushBody)
+		_ = proto.Unmarshal(message.Data, pushBody)
 		if pushBody.Event == pb.PushEvent_PushResponseBody {
 			responseBody := &pb.ResponseBody{}
 			_ = proto.Unmarshal(pushBody.Data, responseBody)
@@ -176,7 +251,7 @@ func loopRead(conn *websocket.Conn) {
 }
 
 func RequestX(
-	conn *websocket.Conn,
+	conn net.Conn,
 	method string,
 	data proto.Message,
 	response proto.Message,
@@ -191,7 +266,13 @@ func RequestX(
 	dataBuff, _ = proto.Marshal(reqBody)
 	ch := make(chan *pb.ResponseBody, 1)
 	respMap.Store(id, ch)
-	err := conn.Write(ctx, websocket.MessageBinary, dataBuff)
+	msg := &znet.Message{
+		DataLen: uint32(len(dataBuff)),
+		ID:      0,
+		Data:    dataBuff,
+	}
+	dataBuff, _ = pack(msg)
+	_, err := conn.Write(dataBuff)
 	if err != nil {
 		return err
 	}
@@ -200,7 +281,7 @@ func RequestX(
 	for {
 		select {
 		case <-ctx.Done():
-			return errors.New("timeout")
+			return ctx.Err()
 		case valueBody := <-ch:
 			respMap.Delete(id)
 			if valueBody.Code == pb.ResponseBody_Success {
@@ -218,7 +299,7 @@ func RequestX(
 
 }
 
-func Login(conn *websocket.Conn, req *pb.LoginReq) *pb.LoginResp {
+func Login(conn net.Conn, req *pb.LoginReq) *pb.LoginResp {
 	resp := &pb.LoginResp{}
 	err := RequestX(conn, "/v1/user/white/login", req, resp)
 	if err != nil {
@@ -228,7 +309,7 @@ func Login(conn *websocket.Conn, req *pb.LoginReq) *pb.LoginResp {
 	return resp
 }
 
-func SetConnParams(conn *websocket.Conn, req *pb.SetCxnParamsReq) {
+func SetConnParams(conn net.Conn, req *pb.SetCxnParamsReq) {
 	resp := &pb.SetCxnParamsResp{}
 	err := RequestX(conn, "/v1/conn/white/setCxnParams", req, resp)
 	if err != nil {
@@ -237,7 +318,7 @@ func SetConnParams(conn *websocket.Conn, req *pb.SetCxnParamsReq) {
 	log.Printf("set_conn_params resp: %v", utils.AnyToString(resp))
 }
 
-func SetUserParams(conn *websocket.Conn, req *pb.SetUserParamsReq) {
+func SetUserParams(conn net.Conn, req *pb.SetUserParamsReq) {
 	resp := &pb.SetUserParamsResp{}
 	err := RequestX(conn, "/v1/conn/white/setUserParams", req, resp)
 	if err != nil {
@@ -246,7 +327,7 @@ func SetUserParams(conn *websocket.Conn, req *pb.SetUserParamsReq) {
 	log.Printf("setUserParams resp: %v", utils.AnyToString(resp))
 }
 
-func GetFriendList(conn *websocket.Conn, req *pb.GetFriendListReq) {
+func GetFriendList(conn net.Conn, req *pb.GetFriendListReq) {
 	resp := &pb.GetFriendListResp{}
 	err := RequestX(conn, "/v1/relation/getFriendList", req, resp)
 	if err != nil {
@@ -255,7 +336,7 @@ func GetFriendList(conn *websocket.Conn, req *pb.GetFriendListReq) {
 	log.Printf("getFriendList resp: %v", utils.AnyToString(resp))
 }
 
-func SendMsg(conn *websocket.Conn, req *pb.SendMsgListReq) {
+func SendMsg(conn net.Conn, req *pb.SendMsgListReq) {
 	resp := &pb.SendMsgListResp{}
 	err := RequestX(conn, "/v1/msg/sendMsgList", req, resp)
 	if err != nil {
@@ -343,4 +424,5 @@ func main() {
 	// 阻塞
 	select {}
 }
+
 ```

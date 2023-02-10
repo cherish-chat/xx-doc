@@ -5,6 +5,7 @@
 [//]: # ()
 * api文档
     * [websocket文档](api/ws.md)
+    * [tcp文档](api/tcp.md)
     * [http请求和响应](api/http_request_response.md)
     * [http通用模型](api/http_common.md)
     * [http接口-消息](api/http_app_msg.md)
