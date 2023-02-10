@@ -143,12 +143,14 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"github.com/aceld/zinx/ziface"
 	"github.com/aceld/zinx/znet"
 	"github.com/cherish-chat/xxim-server/common/pb"
 	"github.com/cherish-chat/xxim-server/common/utils"
 	"github.com/cherish-chat/xxim-server/common/xorm"
 	"github.com/zeromicro/go-zero/core/mr"
 	"google.golang.org/protobuf/proto"
+	"io"
 	"log"
 	"net"
 	"strconv"
@@ -156,7 +158,7 @@ import (
 	"time"
 )
 
-var tmpData = make([]byte, 0)
+var dp = znet.NewDataPack()
 
 func pack(msg *znet.Message) ([]byte, error) {
 	//创建一个存放bytes字节的缓冲
@@ -179,36 +181,26 @@ func pack(msg *znet.Message) ([]byte, error) {
 	return dataBuff.Bytes(), nil
 }
 
-func unpack(buff []byte) *znet.Message {
-	tmpData = append(tmpData, buff...)
-	if len(tmpData) < 8 {
-		return nil
-	}
+// Unpack 拆包方法(解压数据)
+func unpack(binaryData []byte) (ziface.IMessage, error) {
 	//创建一个从输入二进制数据的ioReader
-	dataBuff := bytes.NewReader(tmpData)
+	dataBuff := bytes.NewReader(binaryData)
 
-	//只解压head信息，得到dataLen和msgID
+	//只解压head的信息，得到dataLen和msgID
 	msg := &znet.Message{}
+
+	//读dataLen
 	if err := binary.Read(dataBuff, binary.LittleEndian, &msg.DataLen); err != nil {
-		return nil
+		return nil, err
 	}
 
+	//读msgID
 	if err := binary.Read(dataBuff, binary.LittleEndian, &msg.ID); err != nil {
-		return nil
+		return nil, err
 	}
 
-	if int(msg.DataLen)+8 > len(tmpData) {
-		return nil
-	}
-
-	//解压data数据
-	msg.Data = make([]byte, msg.DataLen)
-	if err := binary.Read(dataBuff, binary.LittleEndian, msg.Data); err != nil {
-		return nil
-	}
-
-	tmpData = tmpData[8+msg.DataLen:]
-	return msg
+	//这里只需要把head的数据拆包出来就可以了，然后再通过head的长度，再从conn读取一次数据
+	return msg, nil
 }
 
 var respMap sync.Map
@@ -225,26 +217,32 @@ func Connect() net.Conn {
 
 func loopRead(conn net.Conn) {
 	for {
-		// 接收最大1024字节的数据
-		var readBuff = make([]byte, 1024)
-		n, err := conn.Read(readBuff)
+		headData := make([]byte, dp.GetHeadLen())
+		_, err := io.ReadFull(conn, headData)
 		if err != nil {
-			log.Fatalf("failed to read: %v", err)
+			log.Fatalf("failed to read head: %v", err)
 		}
-		readBuff = readBuff[:n]
-		message := unpack(readBuff)
-		if message == nil {
-			continue
+		msgHead, err := unpack(headData)
+		if err != nil {
+			log.Fatalf("failed to unpack head: %v", err)
 		}
-		pushBody := &pb.PushBody{}
-		_ = proto.Unmarshal(message.Data, pushBody)
-		if pushBody.Event == pb.PushEvent_PushResponseBody {
-			responseBody := &pb.ResponseBody{}
-			_ = proto.Unmarshal(pushBody.Data, responseBody)
-			value, ok := respMap.Load(responseBody.ReqId)
-			if ok {
-				ch := value.(chan *pb.ResponseBody)
-				ch <- responseBody
+		if msgHead.GetDataLen() > 0 {
+			msg := msgHead.(*znet.Message)
+			msg.Data = make([]byte, msg.GetDataLen())
+			_, err := io.ReadFull(conn, msg.Data)
+			if err != nil {
+				log.Fatalf("failed to read data: %v", err)
+			}
+			pushBody := &pb.PushBody{}
+			_ = proto.Unmarshal(msg.Data, pushBody)
+			if pushBody.Event == pb.PushEvent_PushResponseBody {
+				responseBody := &pb.ResponseBody{}
+				_ = proto.Unmarshal(pushBody.Data, responseBody)
+				value, ok := respMap.Load(responseBody.ReqId)
+				if ok {
+					ch := value.(chan *pb.ResponseBody)
+					ch <- responseBody
+				}
 			}
 		}
 	}
@@ -268,7 +266,7 @@ func RequestX(
 	respMap.Store(id, ch)
 	msg := &znet.Message{
 		DataLen: uint32(len(dataBuff)),
-		ID:      0,
+		ID:      2,
 		Data:    dataBuff,
 	}
 	dataBuff, _ = pack(msg)
@@ -281,6 +279,7 @@ func RequestX(
 	for {
 		select {
 		case <-ctx.Done():
+			log.Printf("request timeout, method: %v, reqId: %v", method, id)
 			return ctx.Err()
 		case valueBody := <-ch:
 			respMap.Delete(id)
