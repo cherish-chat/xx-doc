@@ -47,6 +47,32 @@ message ConfirmRegisterResp {
 }
 ```
 
+## 3. Register: 注册
+
+- 请求地址：`/v1/user/white/register`
+- 请求体：
+
+```protobuf
+message RegisterReq {
+  CommonReq commonReq = 1;
+  string id = 2; // 用户id 只能是英文和数字_，长度为6-20
+  string password = 3; // 密码 // md5 数据库中会存入该值加盐后的值
+  optional string nickname = 4;
+  optional XB xb = 5;
+  optional BirthdayInfo birthday = 6;
+}
+```
+
+- 响应体：
+
+```protobuf
+message RegisterResp {
+  CommonResp commonResp = 1;
+  string token = 2;
+  string userId = 3;
+}
+```
+
 ## 3. SearchUsersByKeyword: 使用关键词搜索用户
 
 - 请求地址：`/v1/user/searchUsersByKeyword`
