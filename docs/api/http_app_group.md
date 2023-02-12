@@ -161,3 +161,24 @@ message GetGroupMemberInfoResp {
   GroupMemberInfo groupMemberInfo = 2;
 }
 ```
+
+## 5. SearchGroupsByKeyword: 搜索群组
+
+- 请求地址：`/v1/group/searchGroupsByKeyword`
+- 请求体：
+
+```protobuf
+message SearchGroupsByKeywordReq {
+  CommonReq commonReq = 1;
+  string keyword = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+message SearchGroupsByKeywordResp {
+  CommonResp commonResp = 1;
+  repeated GroupBaseInfo groups = 2;
+}
+```
