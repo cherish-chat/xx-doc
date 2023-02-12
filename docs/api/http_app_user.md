@@ -73,7 +73,7 @@ message RegisterResp {
 }
 ```
 
-## 3. SearchUsersByKeyword: 使用关键词搜索用户
+## 4. SearchUsersByKeyword: 使用关键词搜索用户
 
 - 请求地址：`/v1/user/searchUsersByKeyword`
 - 请求体：
@@ -94,7 +94,7 @@ message SearchUsersByKeywordResp {
 }
 ```
 
-## 4. GetUserHome: 获取用户主页信息
+## 5. GetUserHome: 获取用户主页信息
 
 - 请求地址：`/v1/user/getUserHome`
 - 请求体：
@@ -124,7 +124,7 @@ message GetUserHomeResp {
 }
 ```
 
-## 5. GetUserSettings: 获取用户设置
+## 6. GetUserSettings: 获取用户设置
 
 - 请求地址：`/v1/user/getUserSettings`
 - 请求体：
@@ -156,7 +156,7 @@ message GetUserSettingsResp {
 }
 ```
 
-## 6. SetUserSettings: 更新用户设置
+## 7. SetUserSettings: 更新用户设置
 
 - 请求地址：`/v1/user/setUserSettings`
 - 请求体：
@@ -172,6 +172,27 @@ message SetUserSettingsReq {
 
 ```protobuf
 message SetUserSettingsResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 8. UpdateUserPassword: 更新用户密码
+
+- 请求地址：`/v1/user/updateUserPassword`
+- 请求体：
+
+```protobuf
+message UpdateUserPasswordReq {
+  CommonReq commonReq = 1;
+  string oldPassword = 2;
+  string newPassword = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+message UpdateUserPasswordResp {
   CommonResp commonResp = 1;
 }
 ```
