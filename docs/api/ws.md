@@ -47,6 +47,23 @@ message ResponseBody {
   Code code = 3; // 响应码
   bytes data = 4; // 响应数据
 }
+
+message CommonResp {
+  enum Code {
+    Success = 0;
+
+    UnknownError = 1;  // 未知 error
+    InternalError = 2; // 内部错误
+    RequestError = 3;  // 请求错误
+    AuthError = 4;     // 鉴权错误 // 应该退出登录
+    ToastError = 5;    // toast 错误 只有 message
+    AlertError = 7;    // alert 错误 只有一个确定按钮
+    RetryError = 8;    // alert 错误 有一个取消按钮 和一个重试按钮
+  }
+  Code code = 1;
+  optional string msg = 2;
+  bytes data = 3;
+}
 ```
 
 ## 通讯流程
@@ -99,7 +116,21 @@ message SetUserParamsResp {}
 
 发送一条二进制类型消息，内容为RequestBody的序列化数据。其中`method`为http api文档中的path，`data`为文档中的请求数据的序列化数据
 
-> 需要注意的是，data中CommonReq不需要传递，此参数为服务端专用参数，客户端不需要传递
+### 注意
+
+- 1.data中CommonReq不需要传递，此参数为服务端专用参数，客户端不需要传递
+- 2.当ResponseBody中的code不为0时，data中的数据为CommonResp的序列化数据
+- 3.CommonResp中的data的msg在每种code下的含义不同 如下
+
+| code | msg含义            | msg数据结构                                                                                     |
+|------|------------------|---------------------------------------------------------------------------------------------|
+| 1    | 未知错误原因           | string                                                                                      |
+| 2    | 内部错误原因           | string                                                                                      |
+| 3    | 请求错误             | 无                                                                                           |
+| 4    | 鉴权错误原因           | string                                                                                      |
+| 5    | toast错误 需要吐丝     | string                                                                                      |
+| 7    | alert错误 需要dialog | {title: "", msg: "", actions: [{action: 0, title: "确定", "jumpTo": "xxx"}]} //action=0代表取消动作 |
+| 8    | 临时错误 需要重试        | 展示重试弹窗                                                                                      |
 
 #### 示例1. 发送消息
 

@@ -9,8 +9,9 @@
 message SendMsgListReq {
   repeated MsgData msgDataList = 1;
   // options
-  //  延迟时间（秒） 不得大于 864000秒 也就是10天 只有开启了Pulsar的延迟消息功能才有效
+  // 1. 延迟时间（秒） 不得大于 864000秒 也就是10天
   optional int32 deliverAfter = 2;
+  CommonReq commonReq = 11;
 }
 ```
 
@@ -32,6 +33,8 @@ message BatchGetMsgListByConvIdReq {
     repeated string seqList = 2;
   }
   repeated Item items = 1;
+  bool push = 2;
+  CommonReq commonReq = 11;
 }
 ```
 
@@ -39,7 +42,8 @@ message BatchGetMsgListByConvIdReq {
 
 ```protobuf
 message GetMsgListResp {
-  repeated MsgData msgDataList = 1; // 如果是websocket推送的方式，这里是空的
+  repeated MsgData msgDataList = 1;
+  CommonResp commonResp = 11;
 }
 ```
 
@@ -52,6 +56,8 @@ message GetMsgListResp {
 message GetMsgByIdReq {
   optional string serverMsgId = 1;
   optional string clientMsgId = 2;
+  bool push = 3;
+  CommonReq commonReq = 11;
 }
 ```
 
@@ -60,6 +66,7 @@ message GetMsgByIdReq {
 ```protobuf
 message GetMsgByIdResp {
   MsgData msgData = 1;
+  CommonResp commonResp = 11;
 }
 ```
 
@@ -71,6 +78,7 @@ message GetMsgByIdResp {
 ```protobuf
 message BatchGetConvSeqReq {
   repeated string convIdList = 1;
+  CommonReq commonReq = 11;
 }
 ```
 
@@ -85,5 +93,6 @@ message BatchGetConvSeqResp {
     string updateTime = 4;
   }
   map<string, ConvSeq> convSeqMap = 1;
+  CommonResp commonResp = 11;
 }
 ```

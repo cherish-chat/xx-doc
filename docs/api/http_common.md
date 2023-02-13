@@ -23,26 +23,10 @@ message CommonResp {
 }
 ```
 
-### 1.2 CommonReq: 请求消息体
+### ~~1.2 CommonReq: 请求消息体~~
 
 ```protobuf
-message CommonReq {
-  string userId = 1;
-  string token = 2;
-
-  string deviceModel = 11;
-  string deviceId = 12;
-  string osVersion = 13;
-  string platform = 14;
-
-  string appVersion = 21;
-  string language = 22;
-
-  bytes data = 31;
-
-  string ip = 41;
-  string userAgent = 42;
-}
+message CommonReq {}
 ```
 
 ### 1.3 IpRegion: ip地区
@@ -163,11 +147,11 @@ enum ConvType {
 ### 4.2 ContentType: 消息类型
 
 ```protobuf
+// 这是msgData的ContentType类型
 enum ContentType {
   UNKNOWN = 0;
   TYPING = 1; // 正在输入
-  READ = 2; // 已读
-  REVOKE = 3; // 撤回
+  TIP = 2; // 提示 灰色小字 比如：xxx加入群聊、xxx撤回了一条消息
 
   TEXT = 11; // 文本
   IMAGE = 12; // 图片
@@ -179,16 +163,26 @@ enum ContentType {
   MERGE = 18; // 合并
   EMOJI = 19; // 表情
   COMMAND = 20; // 命令
-  RICH_TXT = 21; // 富文本
+  RICH_TEXT = 21; // 富文本
   MARKDOWN = 22; // markdown
 
   CUSTOM = 100; // 自定义消息
+}
+
+// 这是noticeData的ContentType类型
+enum NoticeType {
+  INVALID = 0;
+  // 已读
+  READ = 1;
+  // 编辑
+  EDIT = 2;
 }
 ```
 
 ### 4.3 MsgData: 消息体
 
 ```protobuf
+
 message MsgData {
   message OfflinePush {
     string title = 1;
@@ -214,18 +208,18 @@ message MsgData {
   string clientTime = 3;
   string serverTime = 4;
 
-  string senderId = 11;
-  bytes senderInfo = 12;
+  string senderId = 11; // 发送者id
+  bytes senderInfo = 12; // 发送者信息
 
-  string convId = 21;
-  repeated string atUsers = 22;
+  string convId = 21; // 会话id (单聊时 single:user1-user2，群聊时 group:groupId，通知号 notice:noticeId)
+  repeated string atUsers = 22;   // 强提醒用户id列表 用户不在线时，会收到离线推送，除非用户屏蔽了该会话 如果需要提醒所有人，可以传入"all"
 
-  ContentType contentType = 31;
-  bytes content = 32;
-  string seq = 33;
+  int32 contentType = 31; // 消息内容类型
+  bytes content = 32; // 消息内容
+  string seq = 33; // 消息序号 会话内唯一且递增
 
-  Options options = 41;
-  OfflinePush offlinePush = 42;
+  Options options = 41; // 消息选项
+  OfflinePush offlinePush = 42; // 离线推送
 
   bytes ext = 101;
 }
@@ -269,13 +263,5 @@ message NoticeData {
 
   // 扩展信息
   bytes ext = 31; // 扩展字段
-}
-```
-
-### 4.6 NoticeDataList: 通知消息列表
-
-```protobuf
-message NoticeDataList {
-  repeated NoticeData noticeDataList = 1;
 }
 ```
