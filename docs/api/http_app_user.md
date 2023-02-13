@@ -196,3 +196,60 @@ message UpdateUserPasswordResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 9. SendSms: 发送短信
+
+- 请求地址：`/v1/user/white/sendSms`
+- 请求体：
+
+```protobuf
+//SendSmsReq 发送短信请求
+message SendSmsReq {
+  CommonReq commonReq = 1;
+  string phone = 2;
+  optional string countryCode = 3; // +86
+  // 业务场景
+  string scene = 4;
+  // 失效时间 分钟 默认5
+  optional int32 expireMinute = 5;
+}
+```
+
+- 响应体：
+
+```protobuf
+//SendSmsResp 发送短信响应
+message SendSmsResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 10. VerifySms: 验证短信
+
+- 请求地址：`/v1/user/white/verifySms`
+- 请求体：
+
+```protobuf
+//VerifySmsReq 验证短信请求
+message VerifySmsReq {
+  CommonReq commonReq = 1;
+  string phone = 2;
+  optional string countryCode = 3;
+  // 业务场景
+  string scene = 4;
+  // 验证码
+  string code = 5;
+  // 验证后是否删除
+  bool delete = 6;
+}
+
+```
+
+- 响应体：
+
+```protobuf
+//VerifySmsResp 验证短信响应
+message VerifySmsResp {
+  CommonResp commonResp = 1;
+}
+```
