@@ -96,3 +96,51 @@ message BatchGetConvSeqResp {
   CommonResp commonResp = 11;
 }
 ```
+
+## 5. sendReadMsg: 发送已读消息
+
+- 请求地址：`/v1/msg/sendReadMsg`
+- 请求体：
+
+```protobuf
+message ReadMsgReq {
+  string senderId = 1;
+  string convId = 2;
+  string seq = 3;
+  bytes noticeContent = 4;
+  CommonReq commonReq = 11;
+}
+```
+
+- 响应体：
+
+```protobuf
+message ReadMsgResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 6. sendEditMsg: 编辑已发送的消息
+
+- 请求地址：`/v1/msg/sendEditMsg`
+- 请求体：
+
+```protobuf
+message EditMsgReq {
+  string senderId = 1;
+  string serverMsgId = 2;
+  int32 contentType = 3;
+  bytes content = 4;
+  bytes ext = 5;
+  bytes noticeContent = 6;
+  CommonReq commonReq = 11;
+}
+```
+
+- 响应体：
+
+```protobuf
+message EditMsgResp {
+  CommonResp commonResp = 1;
+}
+```
