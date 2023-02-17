@@ -182,3 +182,122 @@ message SearchGroupsByKeywordResp {
   repeated GroupBaseInfo groups = 2;
 }
 ```
+
+## 6. GetGroupHome: 获取群主页
+
+- 请求地址：`/v1/group/getGroupHome`
+- 请求体：
+
+```protobuf
+message GetGroupHomeReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+//GetGroupHomeResp 获取群聊首页
+message GetGroupHomeResp {
+  CommonResp commonResp = 1;
+  // 群ID
+  string groupId = 2;
+  // 群名称
+  string name = 3;
+  // 群头像
+  string avatar = 4;
+  // 创建日期
+  string createdAt = 5;
+  // 成员人数
+  int32 memberCount = 6;
+  // 群介绍
+  string introduction = 7;
+  // 成员统计
+  message MemberStatistics {
+    // 统计标题
+    string title = 1;
+    // 人数
+    int32 count = 2;
+    // 占百分比
+    int32 percentage = 3;
+  }
+  repeated MemberStatistics memberStatistics = 21;
+}
+```
+
+## 7. GetGroupMemberList: 获取群成员列表
+
+- 请求地址：`/v1/group/getGroupMemberList`
+- 请求体：
+
+```protobuf
+//GetGroupMemberListReq 获取群成员列表
+message GetGroupMemberListReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 分页
+  Page page = 3;
+  // Filter
+  message GetGroupMemberListFilter {
+    // 是否接受离线推送
+    optional bool noDisturb = 1;
+    // 只包含群主
+    optional bool onlyOwner = 2;
+    // 只包含管理员
+    optional bool onlyAdmin = 3;
+    // 只包含成员
+    optional bool onlyMember = 4;
+  }
+  GetGroupMemberListFilter filter = 4; // 如果只包含群主和管理员 那么设置onlyOwner=true,onlyAdmin=true
+  message GetGroupMemberListOpt {
+    // 是否只获取id
+    optional bool onlyId = 1;
+  }
+  GetGroupMemberListOpt opt = 5;
+}
+```
+
+- 响应体：
+
+```protobuf
+enum GroupRole {
+  // 普通成员
+  MEMBER = 0;
+  // 管理员
+  MANAGER = 1;
+  // 群主
+  OWNER = 2;
+}
+message GroupMemberInfo {
+  // 群id
+  string groupId = 1;
+  // 群成员id
+  string memberId = 2;
+  // 群内显示的昵称
+  string remark = 3;
+  // 群聊的备注
+  string groupRemark = 4;
+  // 置顶选项
+  bool top = 5;
+  // 免打扰选项
+  bool noDisturb = 6;
+  // 聊天背景图
+  string chatBg = 8;
+  // 群角色
+  GroupRole role = 9;
+  // 解封时间
+  int64 unbanTime = 10;
+  // 消息通知是否预览
+  bool preview = 11;
+}
+
+//GetGroupMemberListResp 获取群成员列表
+message GetGroupMemberListResp {
+  CommonResp commonResp = 1;
+  // 群成员列表
+  repeated GroupMemberInfo groupMemberList = 2;
+}
+```
