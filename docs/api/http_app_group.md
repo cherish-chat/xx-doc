@@ -301,3 +301,111 @@ message GetGroupMemberListResp {
   repeated GroupMemberInfo groupMemberList = 2;
 }
 ```
+
+## 8. ApplyToBeGroupMember: 申请加入群组
+
+- 请求地址：`/v1/group/applyToBeGroupMember`
+- 请求体：
+
+```protobuf
+//applyToBeGroupMember 申请加入群聊
+message ApplyToBeGroupMemberReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 申请理由
+  string reason = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+message ApplyToBeGroupMemberResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 9. HandleGroupApply: 处理群申请
+
+- 请求地址：`/v1/group/handleGroupApply`
+- 请求体：
+
+```protobuf
+//handleGroupApply 处理群聊申请
+message HandleGroupApplyReq {
+  CommonReq commonReq = 1;
+  // 申请ID
+  string applyId = 2;
+  // 处理结果
+  GroupApplyHandleResult result = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+message HandleGroupApplyResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 10. GetGroupApplyList: 获取群申请列表
+
+- 请求地址：`/v1/group/getGroupApplyList`
+- 请求体：
+
+```protobuf
+//getGroupApplyList 获取群聊申请列表
+message GetGroupApplyListReq {
+  CommonReq commonReq = 1;
+  // 分页
+  Page page = 2;
+  // 过滤
+  message Filter {
+    // 申请状态
+    optional GroupApplyHandleResult result = 1;
+  }
+  Filter filter = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+message GroupApplyInfo {
+  // 申请ID
+  string applyId = 1;
+  // 群ID
+  string groupId = 2;
+  // 申请人
+  string userId = 3;
+  // 申请状态
+  GroupApplyHandleResult result = 4;
+  // 申请理由
+  string reason = 5;
+  // 申请时间
+  int64 applyTime = 6;
+  string applyTimeStr = 7;
+  // 处理时间
+  int64 handleTime = 8;
+  string handleTimeStr = 9;
+  // 处理人
+  string handleUserId = 10;
+
+  // 申请人的baseInfo
+  optional UserBaseInfo userBaseInfo = 11;
+  // 处理人的baseInfo
+  optional UserBaseInfo handleUserBaseInfo = 12;
+
+  // 群的baseInfo
+  optional GroupBaseInfo groupBaseInfo = 13;
+}
+message GetGroupApplyListResp {
+  CommonResp commonResp = 1;
+  // 申请列表
+  repeated GroupApplyInfo groupApplyList = 2;
+  // 总数
+  int64 total = 3;
+}
+```
