@@ -116,6 +116,7 @@ message UserBaseInfo {
   BirthdayInfo birthday = 5;
   // 最后一次连接 ip所在地
   IpRegion ipRegion = 6;
+  int32 role = 7; // 0:普通用户 1:管理员/客服 2:游客
 }
 ```
 
