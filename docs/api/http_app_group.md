@@ -409,3 +409,28 @@ message GetGroupApplyListResp {
   int64 total = 3;
 }
 ```
+
+## 11. KickGroupMember: 踢出群成员(可以踢自己)
+
+- 请求地址：`/v1/group/kickGroupMember`
+- 请求体：
+
+```protobuf
+//KickGroupMemberReq 踢出群成员
+message KickGroupMemberReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  string memberId = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+//KickGroupMemberResp 踢出群成员
+message KickGroupMemberResp {
+  CommonResp commonResp = 1;
+}
+```
