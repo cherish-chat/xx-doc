@@ -253,3 +253,25 @@ message VerifySmsResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 11. UpdateUserInfo: 更新用户信息
+
+- 请求地址：`/v1/user/updateUserInfo`
+- 请求体：
+
+```protobuf
+message UpdateUserInfoReq {
+  CommonReq commonReq = 1;
+  optional string nickname = 2;
+  optional string avatar = 3;
+  optional string signature = 4;
+}
+```
+
+- 响应体：
+
+```protobuf
+message UpdateUserInfoResp {
+  CommonResp commonResp = 1;
+}
+```

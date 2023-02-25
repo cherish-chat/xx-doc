@@ -92,8 +92,8 @@ message SetCxnParamsReq {
   string language = 7; // 客户端语言
   string networkUsed = 8; // 客户端网络类型
   bytes ext = 11; // 扩展字段
-  optional bytes aesKey = 9; // 用于加密请求和响应的aes key; 他应该是随机字符串的rsa加密结果; 服务端拿到该字段后使用rsa私钥解密得到随机字符串; 然后md5(随机字符串)得到aes key
-  optional bytes aesIv = 10; // 用于加密请求和响应的aes iv; 他应该是随机字符串的rsa加密结果; 服务端拿到该字段后使用rsa私钥解密得到随机字符串; 然后md5_16(随机字符串)得到aes iv
+  bytes aesKey = 9; // 用于加密请求和响应的aes key; 他应该是随机字符串的rsa加密结果; 服务端拿到该字段后使用rsa私钥解密得到随机字符串; 然后md5(随机字符串)得到aes key
+  bytes aesIv = 10; // 用于加密请求和响应的aes iv; 他应该是随机字符串的rsa加密结果; 服务端拿到该字段后使用rsa私钥解密得到随机字符串; 然后md5_16(随机字符串)得到aes iv
 }
 
 // 如果你的请求传入了aesKey aesIv，服务端校验成功。那么服务端之后所有的推送PushBody都会使用aes加密（包括本次响应）。客户端之后的每次请求都需要使用aes加密
