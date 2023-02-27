@@ -275,3 +275,31 @@ message UpdateUserInfoResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 12. ResetPassword: 使用手机号重置密码
+
+- 请求地址：`/v1/user/white/resetPassword`
+- 请求体：
+
+```protobuf
+// 忘记密码重置密码
+//ResetPasswordReq 重置密码
+message ResetPasswordReq {
+  CommonReq commonReq = 1;
+  // 手机号
+  string mobile = 2;
+  optional string mobileCountryCode = 3;
+  // 验证码
+  string smsCode = 4;
+  // 新密码
+  string newPassword = 5;
+}
+```
+
+- 响应体：
+
+```protobuf
+message ResetPasswordResp {
+  CommonResp commonResp = 1;
+}
+```
