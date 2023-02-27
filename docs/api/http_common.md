@@ -149,34 +149,29 @@ enum ConvType {
 
 ```protobuf
 // 这是msgData的ContentType类型
-enum ContentType {
-  UNKNOWN = 0;
-  TYPING = 1; // 正在输入
-  TIP = 2; // 提示 灰色小字 比如：xxx加入群聊、xxx撤回了一条消息
+syntax = "proto3";
+package pb;
+option go_package = "./pb";
 
-  TEXT = 11; // 文本
-  IMAGE = 12; // 图片
-  AUDIO = 13; // 语音
-  VIDEO = 14; // 视频
-  FILE = 15; // 文件
-  LOCATION = 16; // 位置
-  CARD = 17; // 名片
-  MERGE = 18; // 合并
-  EMOJI = 19; // 表情
-  COMMAND = 20; // 命令
-  RICH_TEXT = 21; // 富文本
-  MARKDOWN = 22; // markdown
+enum MsgContentType {
+  unknown = 0; // 未知类型
+  typing = 1; // 正在输入
+  tip = 2; // 提示
 
-  CUSTOM = 100; // 自定义消息
-}
+  text = 11; // 文本
+  image = 12; // 图片
+  audio = 13; // 语音
+  video = 14; // 视频
+  file = 15; // 文件
+  location = 16; // 位置
+  card = 17; // 名片
+  merge = 18; // 合并
+  emoji = 19; // 表情
+  command = 20; // 命令
+  richText = 21; // 富文本
+  markdown = 22; // markdown
 
-// 这是noticeData的ContentType类型
-enum NoticeType {
-  INVALID = 0;
-  // 已读
-  READ = 1;
-  // 编辑
-  EDIT = 2;
+  custom = 100; // 自定义消息
 }
 ```
 
