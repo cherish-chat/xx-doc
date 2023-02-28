@@ -436,3 +436,23 @@ message KickGroupMemberResp {
 ```
 
 ## 12. ReportGroup: 举报群
+
+- 请求地址：`/v1/group/reportGroup`
+- 请求体：
+
+```protobuf
+message ReportGroupReq {
+  CommonReq commonReq = 1;
+  string groupId = 2;
+  string reason = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+// ReportGroupResp 举报群
+message ReportGroupResp {
+  CommonResp commonResp = 1;
+}
+```
