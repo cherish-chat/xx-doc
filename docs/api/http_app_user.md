@@ -303,3 +303,27 @@ message ResetPasswordResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 13. ReportUser: 举报用户
+
+- 请求地址：`/v1/user/reportUser`
+- 请求体：
+
+```protobuf
+// 举报用户
+// ReportUserReq 举报用户请求
+message ReportUserReq {
+  CommonReq commonReq = 1;
+  string userId = 2;
+  string reason = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+// ReportUserResp 举报用户响应
+message ReportUserResp {
+  CommonResp commonResp = 1;
+}
+```

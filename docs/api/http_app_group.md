@@ -434,3 +434,5 @@ message KickGroupMemberResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 12. ReportGroup: 举报群
