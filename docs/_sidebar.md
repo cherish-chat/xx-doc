@@ -14,6 +14,7 @@
     * [http接口-用户](api/http_app_user.md)
     * [http接口-关系](api/http_app_relation.md)
     * [http接口-群组](api/http_app_group.md)
+    * [http接口-IM其他](api/http_app_im.md)
     * [关于convid函数](api/about_convid.md)
 
 * 联系我们
