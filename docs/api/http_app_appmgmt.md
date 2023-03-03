@@ -65,3 +65,38 @@ message AppGetAllConfigResp {
 | group.show_group_info.user           | 普通用户是否显示群信息          | bool   |                |
 | group.show_group_info.user.link_name | 发现底导的名称              | bool   |                |
 | group.show_group_info.user.link_show | 是否展示发现底导             | bool   |                |
+
+
+## 2. GetLatestVersion: 获取最新版本
+
+- 请求地址：`/v1/appmgmt/white/appGetLatestVersion`
+- 请求体：
+
+```protobuf
+//AppMgmtVersion app管理系统 版本
+message AppMgmtVersion {
+  string id = 1;
+  string version = 2;
+  string platform = 3;
+  int32 type = 4; // 0: 不提示 1: 提示 2: 强制
+  string content = 5;
+  string downloadUrl = 6;
+  int64 createdAt = 7;
+  string createdAtStr = 8;
+}
+
+//App获取最新版本
+message GetLatestVersionReq {
+  CommonReq commonReq = 1;
+}
+```
+
+- 响应体：
+
+```protobuf
+//App获取最新版本
+message GetLatestVersionResp {
+  CommonResp commonResp = 1;
+  AppMgmtVersion appMgmtVersion = 2;
+}
+```
