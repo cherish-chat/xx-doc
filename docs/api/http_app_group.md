@@ -456,3 +456,32 @@ message ReportGroupResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 13. EditGroupInfo: 编辑群信息
+
+- 请求地址：`/v1/group/editGroupInfo`
+- 请求体：
+
+```protobuf
+//EditGroupInfoReq 编辑群资料
+message EditGroupInfoReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群名称
+  optional string name = 3;
+  // 群头像
+  optional string avatar = 4;
+  // 群介绍
+  optional string introduction = 5;
+}
+```
+
+- 响应体：
+
+```protobuf
+//EditGroupInfoResp 编辑群资料
+message EditGroupInfoResp {
+  CommonResp commonResp = 1;
+}
+```
