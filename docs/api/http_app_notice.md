@@ -68,6 +68,7 @@ message NoticeData {
 | 305   | 群成员信息更新 | {groupId: "", memberId: "", updateMap: {}}                                                                                                |
 | 306   | 设置群信息   | {groupId: ""}                                                                                                                             |
 | 307   | 恢复群     | {groupId: ""}                                                                                                                             |
+| 308   | 更新群信息     | {groupId: "", updateMap: {}}                                                                                                                             |
 | ----- | -----   | ----新群通知-----                                                                                                                             |
 | 401   | 申请加群    | {applyId: "", groupId: "", userId: "", result: 0/1/2, reason: "", applyTime: 1234567890123, handleTime: 1234567890123, handleUserId: "" } |
 | ----- | -----   | ----新好友通知-----                                                                                                                            |
