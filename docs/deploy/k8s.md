@@ -121,6 +121,91 @@ CREATE DATABASE `xxim_v1` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_
 set s:model:server_config $serverConfig
 ```
 
+#### 1.1.3 minio开启download模式
+
+```go
+package main
+
+import (
+	"context"
+	minio "github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
+)
+
+type MinioConfig struct {
+	Endpoint        string `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint"`
+	AccessKeyId     string `protobuf:"bytes,2,opt,name=accessKeyId,proto3" json:"accessKeyId"`
+	SecretAccessKey string `protobuf:"bytes,3,opt,name=secretAccessKey,proto3" json:"secretAccessKey"`
+	BucketName      string `protobuf:"bytes,4,opt,name=bucketName,proto3" json:"bucketName"`
+	Ssl             bool   `protobuf:"varint,5,opt,name=ssl,proto3" json:"ssl"`
+	BucketUrl       string `protobuf:"bytes,6,opt,name=bucketUrl,proto3" json:"bucketUrl"`
+	Region          string `protobuf:"bytes,7,opt,name=region,proto3" json:"region"`
+}
+
+// MinioStorage minio存储 实现Storage接口
+type MinioStorage struct {
+	Config *MinioConfig
+	Client *minio.Client
+}
+
+func (s *MinioStorage) ExistObject(ctx context.Context, key string) (exists bool, err error) {
+	_, err = s.Client.StatObject(ctx, s.Config.BucketName, key, minio.StatObjectOptions{})
+	if err != nil {
+		e, ok := err.(minio.ErrorResponse)
+		if ok && e.Code == "NoSuchKey" {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
+// NewMinioStorage 创建minio存储
+func NewMinioStorage(config *MinioConfig) (*MinioStorage, error) {
+	client, err := minio.New(config.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(config.AccessKeyId, config.SecretAccessKey, ""),
+		Secure: config.Ssl,
+		Region: config.Region,
+	})
+	if err != nil {
+		return nil, err
+	}
+	s := &MinioStorage{
+		Config: config,
+		Client: client,
+	}
+	return s, nil
+}
+
+func (s *MinioStorage) setDownloadPolicy() error {
+	// mc policy set download xxim
+	err := s.Client.SetBucketPolicy(context.Background(), s.Config.BucketName, `{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::`+s.Config.BucketName+`/*"]}]}`)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func main() {
+	storage, err := NewMinioStorage(&MinioConfig{
+		Endpoint:        "YOURENDPOINT",
+		AccessKeyId:     "YOURACCESSKEY",
+		SecretAccessKey: "YOURSECRETKEY",
+		BucketName:      "xxim",
+		Ssl:             false,
+		BucketUrl:       "http://YOURENDPOINT/xxim",
+		Region:          "",
+	})
+	if err != nil {
+		panic(err)
+	}
+	err = storage.setDownloadPolicy()
+	if err != nil {
+		panic(err)
+	}
+}
+```
+
 ## 2. 部署
 
 ### 2.1 serviceAccount 服务账户
