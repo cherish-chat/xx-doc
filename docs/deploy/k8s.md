@@ -1401,4 +1401,4 @@ spec:
 | msg-rpc      | 20230314022642 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-msg-rpc      |
 | notice-rpc   | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-notice-rpc   |
 | relation-rpc | 20230314024328 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-relation-rpc |
-| user-rpc     | 20230314021841 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-user-rpc     |
+| user-rpc     | 20230314034006 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-user-rpc     |
