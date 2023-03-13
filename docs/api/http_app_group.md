@@ -485,3 +485,28 @@ message EditGroupInfoResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 14. BatchKickGroupMember: 批量踢出群成员
+
+- 请求地址：`/v1/group/batchKickGroupMember`
+- 请求体：
+
+```protobuf
+//BatchKickGroupMemberReq 批量踢出群成员
+message BatchKickGroupMemberReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  repeated string memberIds = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+//BatchKickGroupMemberResp 批量踢出群成员
+message BatchKickGroupMemberResp {
+  CommonResp commonResp = 1;
+}
+```
