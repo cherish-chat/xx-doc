@@ -4,6 +4,9 @@
 
 [//]: # ()
 
+* 部署文档
+    * [k8s部署](deploy/k8s.md)
+
 * api文档
     * [websocket文档](api/ws.md)
     * [tcp文档](api/tcp.md)
