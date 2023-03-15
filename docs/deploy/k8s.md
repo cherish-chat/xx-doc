@@ -1394,7 +1394,7 @@ spec:
 | 应用名称         | 镜像tag          | 镜像地址                                                         |
 |--------------|----------------|--------------------------------------------------------------|
 | appmgmt-rpc  | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-appmgmt-rpc  |
-| conn-rpc     | 20230314031747 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-conn-rpc     |
+| conn-rpc     | 20230314182257 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-conn-rpc     |
 | group-rpc    | 20230314021841 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-group-rpc    |
 | im-rpc       | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-im-rpc       |
 | mgmt         | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-mgmt-rpc     |
