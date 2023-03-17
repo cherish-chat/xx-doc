@@ -510,3 +510,28 @@ message BatchKickGroupMemberResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 15. InviteFriendToGroup: 邀请好友加入群
+
+- 请求地址：`/v1/group/inviteFriendToGroup`
+- 请求体：
+
+```protobuf
+//InviteFriendToGroupReq 邀请好友进群
+message InviteFriendToGroupReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 好友ID
+  repeated string friendIds = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+//InviteFriendToGroupResp 邀请好友进群
+message InviteFriendToGroupResp {
+  CommonResp commonResp = 1;
+}
+```
