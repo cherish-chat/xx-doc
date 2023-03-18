@@ -1394,11 +1394,11 @@ spec:
 | 应用名称         | 镜像tag          | 镜像地址                                                         |
 |--------------|----------------|--------------------------------------------------------------|
 | appmgmt-rpc  | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-appmgmt-rpc  |
-| conn-rpc     | 20230317174442 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-conn-rpc     |
+| conn-rpc     | 20230319003444 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-conn-rpc     |
 | group-rpc    | 20230317174442 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-group-rpc    |
 | im-rpc       | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-im-rpc       |
 | mgmt         | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-mgmt-rpc     |
-| msg-rpc      | 20230315234020 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-msg-rpc      |
+| msg-rpc      | 20230318224424 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-msg-rpc      |
 | notice-rpc   | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-notice-rpc   |
 | relation-rpc | 20230316162754 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-relation-rpc |
-| user-rpc     | 20230316174613 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-user-rpc     |
+| user-rpc     | 20230319003444 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-user-rpc     |

@@ -19,9 +19,11 @@ message LoginReq {
 message LoginResp {
   CommonResp commonResp = 1;
   // 是否是新用户
-  bool isNewUser = 2;
+  bool isNewUser = 2;// 如果是新用户，token为空
   // token
-  string token = 3; // 如果是新用户，token为空
+  string token = 3; 
+  // 是否已注销
+  bool isDestroyed = 5; // 如果已注销，token为空
 }
 ```
 
@@ -324,6 +326,49 @@ message ReportUserReq {
 ```protobuf
 // ReportUserResp 举报用户响应
 message ReportUserResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 14. DestroyAccount: 账号注销
+
+- 请求地址：`/v1/user/destroyAccount`
+- 请求体：
+
+```protobuf
+//DestroyAccountReq 注销账号请求
+message DestroyAccountReq {
+  CommonReq commonReq = 1;
+}
+```
+
+- 响应体：
+
+```protobuf
+//DestroyAccountResp 注销账号响应
+message DestroyAccountResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 15. RecoverAccount: 账号恢复
+
+- 请求地址：`/v1/user/white/recoverAccount`
+- 请求体：
+
+```protobuf
+//RecoverAccountReq 恢复账号请求
+message RecoverAccountReq {
+  CommonReq commonReq = 1;
+  string userId = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+//RecoverAccountResp 恢复账号响应
+message RecoverAccountResp {
   CommonResp commonResp = 1;
 }
 ```
