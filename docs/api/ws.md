@@ -66,6 +66,18 @@ message CommonResp {
 }
 ```
 
+## websocket close code
+
+| code | reason            | desc                        |
+|------|-------------------|-----------------------------|
+| 1000 | 正常关闭              | duplicate connection / kick |
+| 1001 | 正常关闭              | server shutdown / kick      |
+| 1008 | aes加解密失败          | protocol error              |
+| 3000 | 鉴权失败              | 失败原因                        |
+| 3001 | rsa加解密失败          | protocol error              |
+| 3002 | 不受支持的 platform    | platform invalid            |
+| 3003 | packageId invalid | packageId invalid           |
+
 ## 通讯流程
 
 ### 1. 连接
