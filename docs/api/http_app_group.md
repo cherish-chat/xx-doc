@@ -65,6 +65,9 @@ message GroupBaseInfo {
   string id = 1;
   string name = 2;
   string avatar = 3;
+  string owner = 4;
+
+  int64 dismissTime = 5; // 解散时间 如果为0表示未解散 否则进入会话详情应该提示群已解散
 }
 
 //GetMyGroupListResp 获取我的群聊列表
