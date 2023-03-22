@@ -23,6 +23,8 @@ enum PushEvent {
   PushNoticeData = 1;
   // 响应返回
   PushResponseBody = 2;
+  // 连接成功后的回调
+  PushAfterConnect = 3;
 }
 // 服务端会推送的消息体
 message PushBody {
@@ -46,6 +48,9 @@ message ResponseBody {
   string method = 2; // 请求方法，类似于http中的path
   Code code = 3; // 响应码
   bytes data = 4; // 响应数据
+}
+message AfterConnectBody {
+  string aesIv = 1;
 }
 
 message CommonResp {
@@ -86,7 +91,8 @@ message CommonResp {
 
 ### 2. 服务端返回
 
-> 服务端推送一条字符串类型的消息，内容为`connected`
+> ~~服务端推送一条字符串类型的消息，内容为`connected`~~
+> 服务端推送一条二进制类型的消息，内容为 PushBody{event: PushAfterConnect, data: AfterConnectBody{aesIv: aesIv}} 的序列化数据，其中`aesIv`为服务端生成的随机字符串，客户端应该使用md5_16作为aes加密的iv
 
 ### 3. 设置连接参数
 
@@ -105,7 +111,7 @@ message SetCxnParamsReq {
   string networkUsed = 8; // 客户端网络类型
   bytes ext = 11; // 扩展字段
   bytes aesKey = 9; // 用于加密请求和响应的aes key; 他应该是随机字符串的rsa加密结果; 服务端拿到该字段后使用rsa私钥解密得到随机字符串; 然后md5(随机字符串)得到aes key
-  bytes aesIv = 10; // 用于加密请求和响应的aes iv; 他应该是随机字符串的rsa加密结果; 服务端拿到该字段后使用rsa私钥解密得到随机字符串; 然后md5_16(随机字符串)得到aes iv
+  bytes aesIv = 10; // 用于加密请求和响应的aes iv; 他应该是随机字符串的rsa加密结果; 随机字符串从第二步服务端返回;
 }
 
 // 如果你的请求传入了aesKey aesIv，服务端校验成功。那么服务端之后所有的推送PushBody都会使用aes加密（包括本次响应）。客户端之后的每次请求都需要使用aes加密
