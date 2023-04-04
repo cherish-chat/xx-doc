@@ -10,6 +10,7 @@ message LoginReq {
   Requester requester = 1;
   string id = 2; // 用户id 只能是英文和数字_，长度为6-20
   string password = 3; // 密码 // md5 数据库中会存入该值加盐后的值
+  optional string captchaCode = 4; // 图形验证码
 }
 ```
 
@@ -59,9 +60,15 @@ message RegisterReq {
   CommonReq commonReq = 1;
   string id = 2; // 用户id 只能是英文和数字_，长度为6-20
   string password = 3; // 密码 // md5 数据库中会存入该值加盐后的值
-  optional string nickname = 4;
-  optional XB xb = 5;
-  optional BirthdayInfo birthday = 6;
+  optional string nickname = 4; // 昵称
+  optional XB xb = 5; // 性别
+  optional BirthdayInfo birthday = 6; // 生日
+  optional string invitationCode = 7; // 邀请码
+  optional string mobile = 8; // 手机号
+  optional string mobileCountryCode = 9; // 手机号国家码
+  optional string smsCode = 10; // 短信验证码
+  optional string avatar = 11; // 头像
+  optional string captchaCode = 12; // 图形验证码
 }
 ```
 
@@ -369,6 +376,60 @@ message RecoverAccountReq {
 ```protobuf
 //RecoverAccountResp 恢复账号响应
 message RecoverAccountResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 16. GetCaptchaCode: 获取图形验证码
+
+- 请求地址：`/v1/user/white/getCaptchaCode`
+- 请求体：
+
+```protobuf
+//GetCaptchaCodeReq 获取图形验证码请求
+message GetCaptchaCodeReq {
+  CommonReq commonReq = 1;
+  // 业务场景
+  string scene = 2;
+  // 失效时间 分钟 默认5
+  optional int32 expireMinute = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+//GetCaptchaCodeResp 获取图形验证码响应
+message GetCaptchaCodeResp {
+  CommonResp commonResp = 1;
+  bytes captcha = 2;
+}
+```
+
+## 17. VerifyCaptchaCode: 验证图形验证码
+
+- 请求地址：`/v1/user/white/verifyCaptchaCode`
+- 请求体：
+
+```protobuf
+//VerifyCaptchaCodeReq 验证图形验证码请求
+message VerifyCaptchaCodeReq {
+  CommonReq commonReq = 1;
+  string deviceId = 2;
+  // 业务场景
+  string scene = 3; // register login
+  // 验证码
+  string code = 4;
+  // 验证后是否删除 客户端不要删除 因为服务端会再次验证
+  bool delete = 5;
+}
+```
+
+- 响应体：
+
+```protobuf
+//VerifyCaptchaCodeResp 验证图形验证码响应
+message VerifyCaptchaCodeResp {
   CommonResp commonResp = 1;
 }
 ```
