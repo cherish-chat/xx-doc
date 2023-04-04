@@ -66,7 +66,6 @@ message AppGetAllConfigResp {
 | group.show_group_info.user.link_name | 发现底导的名称              | bool   |                |
 | group.show_group_info.user.link_show | 是否展示发现底导             | bool   |                |
 
-
 ## 2. GetLatestVersion: 获取最新版本
 
 - 请求地址：`/v1/appmgmt/white/appGetLatestVersion`
@@ -98,5 +97,72 @@ message GetLatestVersionReq {
 message GetLatestVersionResp {
   CommonResp commonResp = 1;
   AppMgmtVersion appMgmtVersion = 2;
+}
+```
+
+## 3. GetUploadInfo: 获取上传信息
+
+- 请求地址：`/v1/appmgmt/getUploadInfo`
+- 请求体：
+
+```protobuf
+//GetUploadInfoReq 获取上传信息
+message GetUploadInfoReq {
+  CommonReq commonReq = 1;
+  string objectId = 2;
+  // 过期秒数
+  int32 expireSeconds = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+//GetUploadInfoResp 获取上传信息
+message GetUploadInfoResp {
+  CommonResp commonResp = 1;
+  string uploadUrl = 2;
+  map<string, string> headers = 3;
+}
+```
+
+### 如何使用响应中的uploadUrl和headers
+
+- 构建http[PUT]请求
+
+```go
+req, err := http.NewRequest("PUT", uploadUrl, file) // 其中file为文件流
+```
+
+- 设置请求头
+
+```go
+for k, v := range headers {
+    req.Header.Set(k, v)
+}
+```
+
+- 发送请求
+
+```go
+response, err := http.DefaultClient.Do(req)
+```
+
+- 响应码处理
+
+```go
+if response.StatusCode != http.StatusOK {
+	if response.StatusCode == http.Unauthorized { // 401
+        // token过期/无效
+    }
+	if response.StatusCode == http.NotFound { // 404
+        // url不存在 或 文件名不包含文件md5
+    } 
+	if response.StatusCode == http.ServerError { // 500
+        // 服务器错误 可能没有设置正确的对象存储
+    }
+} else {
+    // 上传成功
+    // 返回 {"url": ""}
 }
 ```

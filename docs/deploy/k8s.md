@@ -113,6 +113,9 @@ CREATE DATABASE `xxim_v1` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_
     "HttpPort": 6799,
     "SuperAdminId": "superadmin",
     "SuperAdminPass": "superadmin"
+  },
+  "Xos": {
+    "HttpPort": 6800
   }
 }
 ```
@@ -427,6 +430,24 @@ spec:
   selector:
     app: user-rpc
   type: ClusterIP
+```
+
+#### 2.5.10. xos-svc
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: xos-svc
+spec:
+  ports:
+    - name: port-1
+      port: 6800
+      protocol: TCP
+      targetPort: 6800
+  selector:
+    app: xos-api
+  type: NodePort
 ```
 
 ### 2.6. deployment 部署
@@ -1389,16 +1410,123 @@ spec:
   progressDeadlineSeconds: 600
 ```
 
+#### 2.6.9. xos-api
+
+```yaml
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: xos-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xos-api
+  template:
+    metadata:
+      name: xos-api
+      labels:
+        app: xos-api
+    spec:
+      volumes:
+        - name: timezone
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+            type: ''
+      containers:
+        - name: xos-api
+          image: >-
+            registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-xos-api:20230405004944
+          command:
+            - ./bin
+            - '-a'
+            - 'mgmt-svc:6708'
+          ports:
+            - containerPort: 6800
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: xxim-all-config
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          resources: { }
+          volumeMounts:
+            - name: timezone
+              mountPath: /etc/localtime
+          livenessProbe:
+            tcpSocket:
+              port: 6800
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 6800
+            initialDelaySeconds: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - '-c'
+                  - sleep 5
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: find-endpoints
+      serviceAccount: find-endpoints
+      securityContext: { }
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+```
+
 ### 2.7. 检查应用镜像tag是否为最新
 
 | 应用名称         | 镜像tag          | 镜像地址                                                         |
 |--------------|----------------|--------------------------------------------------------------|
-| appmgmt-rpc  | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-appmgmt-rpc  |
-| conn-rpc     | 20230321162658 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-conn-rpc     |
-| group-rpc    | 20230321164658 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-group-rpc    |
+| appmgmt-rpc  | 20230404231311 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-appmgmt-rpc  |
+| conn-rpc     | 20230404231311 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-conn-rpc     |
+| group-rpc    | 20230324175110 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-group-rpc    |
 | im-rpc       | 20230320010459 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-im-rpc       |
-| mgmt         | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-mgmt-rpc     |
-| msg-rpc      | 20230318224424 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-msg-rpc      |
+| mgmt         | 20230405000146 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-mgmt-rpc     |
+| msg-rpc      | 20230324175110 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-msg-rpc      |
 | notice-rpc   | 20230314011313 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-notice-rpc   |
-| relation-rpc | 20230316162754 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-relation-rpc |
-| user-rpc     | 20230320010459 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-user-rpc     |
+| relation-rpc | 20230324175110 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-relation-rpc |
+| user-rpc     | 20230328210849 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-user-rpc     |
+| xos-api      | 20230405004944 | registry.cn-shanghai.aliyuncs.com/xxim-dev/xxim-xos-api      |
