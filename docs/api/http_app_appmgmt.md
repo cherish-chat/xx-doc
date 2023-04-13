@@ -128,6 +128,7 @@ message GetUploadInfoResp {
 
 ### 如何使用响应中的uploadUrl和headers
 
+#### 1. 使用PUT请求上传文件
 - 构建http[PUT]请求
 
 ```go
@@ -159,6 +160,58 @@ if response.StatusCode != http.StatusOK {
         // url不存在 或 文件名不包含文件md5
     } 
 	if response.StatusCode == http.ServerError { // 500
+        // 服务器错误 可能没有设置正确的对象存储
+    }
+} else {
+    // 上传成功
+    // 返回 {"url": ""}
+}
+```
+
+#### 2. 使用POST表单上传文件
+
+- 构建http[POST]请求
+```go
+req, err := http.NewRequest("POST", uploadUrl, nil)
+```
+
+- 设置请求头
+
+```go
+for k, v := range headers {
+    req.Header.Set(k, v)
+}
+```
+
+- 设置表单
+
+```go
+formBuf := &bytes.Buffer{}
+writer := multipart.NewWriter(formBuf)
+fileWriter, _ := writer.CreateFormFile("file", "test.png")
+_, _ = io.Copy(fileWriter, bytes.NewReader(b))
+_ = writer.Close()
+request.Body = io.NopCloser(formBuf)
+request.Header.Set("Content-Type", writer.FormDataContentType())
+```
+
+- 发送请求
+
+```go
+response, err := http.DefaultClient.Do(req)
+```
+
+- 响应码处理
+
+```go
+if response.StatusCode != http.StatusOK {
+    if response.StatusCode == http.Unauthorized { // 401
+        // token过期/无效
+    }
+    if response.StatusCode == http.NotFound { // 404
+        // url不存在 或 文件名不包含文件md5
+    } 
+    if response.StatusCode == http.ServerError { // 500
         // 服务器错误 可能没有设置正确的对象存储
     }
 } else {
