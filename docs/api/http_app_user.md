@@ -7,10 +7,11 @@
 
 ```protobuf
 message LoginReq {
-  Requester requester = 1;
+  CommonReq commonReq = 1;
   string id = 2; // 用户id 只能是英文和数字_，长度为6-20
   string password = 3; // 密码 // md5 数据库中会存入该值加盐后的值
   optional string captchaCode = 4; // 图形验证码
+  optional string captchaId = 5; // 图形验证码id
 }
 ```
 
@@ -69,6 +70,7 @@ message RegisterReq {
   optional string smsCode = 10; // 短信验证码
   optional string avatar = 11; // 头像
   optional string captchaCode = 12; // 图形验证码
+  optional string captchaId = 13; // 图形验证码id
 }
 ```
 
@@ -403,6 +405,7 @@ message GetCaptchaCodeReq {
 message GetCaptchaCodeResp {
   CommonResp commonResp = 1;
   bytes captcha = 2;
+  string captchaId = 3;
 }
 ```
 
@@ -415,9 +418,9 @@ message GetCaptchaCodeResp {
 //VerifyCaptchaCodeReq 验证图形验证码请求
 message VerifyCaptchaCodeReq {
   CommonReq commonReq = 1;
-  string deviceId = 2;
+  string captchaId = 2;
   // 业务场景
-  string scene = 3; // register login
+  string scene = 3;
   // 验证码
   string code = 4;
   // 验证后是否删除 客户端不要删除 因为服务端会再次验证
