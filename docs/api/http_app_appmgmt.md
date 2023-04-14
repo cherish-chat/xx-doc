@@ -63,8 +63,9 @@ message AppGetAllConfigResp {
 | group.show_invite_msg.allow          | 是否显示群邀请消息            | bool   |                |
 | group.show_fake_member_count.allow   | 是否显示群假成员数量           | bool   |                |
 | group.show_group_info.user           | 普通用户是否显示群信息          | bool   |                |
-| group.show_group_info.user.link_name | 发现底导的名称              | bool   |                |
+| group.show_group_info.user.link_name | 发现底导的名称              | string |                |
 | group.show_group_info.user.link_show | 是否展示发现底导             | bool   |                |
+| group.show_group_info.user.link_url  | 发现底导的链接              | string |                |
 
 ## 2. GetLatestVersion: 获取最新版本
 
@@ -129,6 +130,7 @@ message GetUploadInfoResp {
 ### 如何使用响应中的uploadUrl和headers
 
 #### 1. 使用PUT请求上传文件
+
 - 构建http[PUT]请求
 
 ```go
@@ -139,7 +141,7 @@ req, err := http.NewRequest("PUT", uploadUrl, file) // 其中file为文件流
 
 ```go
 for k, v := range headers {
-    req.Header.Set(k, v)
+req.Header.Set(k, v)
 }
 ```
 
@@ -153,24 +155,25 @@ response, err := http.DefaultClient.Do(req)
 
 ```go
 if response.StatusCode != http.StatusOK {
-	if response.StatusCode == http.Unauthorized { // 401
-        // token过期/无效
-    }
-	if response.StatusCode == http.NotFound { // 404
-        // url不存在 或 文件名不包含文件md5
-    } 
-	if response.StatusCode == http.ServerError { // 500
-        // 服务器错误 可能没有设置正确的对象存储
-    }
+if response.StatusCode == http.Unauthorized { // 401
+// token过期/无效
+}
+if response.StatusCode == http.NotFound { // 404
+// url不存在 或 文件名不包含文件md5
+}
+if response.StatusCode == http.ServerError { // 500
+// 服务器错误 可能没有设置正确的对象存储
+}
 } else {
-    // 上传成功
-    // 返回 {"url": ""}
+// 上传成功
+// 返回 {"url": ""}
 }
 ```
 
 #### 2. 使用POST表单上传文件
 
 - 构建http[POST]请求
+
 ```go
 req, err := http.NewRequest("POST", uploadUrl, nil)
 ```
@@ -179,7 +182,7 @@ req, err := http.NewRequest("POST", uploadUrl, nil)
 
 ```go
 for k, v := range headers {
-    req.Header.Set(k, v)
+req.Header.Set(k, v)
 }
 ```
 
@@ -205,17 +208,17 @@ response, err := http.DefaultClient.Do(req)
 
 ```go
 if response.StatusCode != http.StatusOK {
-    if response.StatusCode == http.Unauthorized { // 401
-        // token过期/无效
-    }
-    if response.StatusCode == http.NotFound { // 404
-        // url不存在 或 文件名不包含文件md5
-    } 
-    if response.StatusCode == http.ServerError { // 500
-        // 服务器错误 可能没有设置正确的对象存储
-    }
+if response.StatusCode == http.Unauthorized { // 401
+// token过期/无效
+}
+if response.StatusCode == http.NotFound { // 404
+// url不存在 或 文件名不包含文件md5
+}
+if response.StatusCode == http.ServerError { // 500
+// 服务器错误 可能没有设置正确的对象存储
+}
 } else {
-    // 上传成功
-    // 返回 {"url": ""}
+// 上传成功
+// 返回 {"url": ""}
 }
 ```
