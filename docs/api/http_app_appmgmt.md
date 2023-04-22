@@ -222,3 +222,29 @@ if response.StatusCode == http.ServerError { // 500
 // 返回 {"url": ""}
 }
 ```
+
+
+## 4. GetAllAppMgmtLink: 获取发现页的外链
+
+- 请求地址：`/v1/appmgmt/getAllAppMgmtLink`
+- 请求体：
+
+```protobuf
+//GetAllAppMgmtLinkReq 获取所有app发现链接
+message GetAllAppMgmtLinkReq {
+  CommonReq commonReq = 1;
+  Page page = 2; // 分页，传page=1&size=9999即可
+  map<string, string> filter = 3; // 不传即可
+}
+```
+
+- 响应体：
+
+```protobuf
+//GetAllAppMgmtLinkResp 获取所有app发现链接
+message GetAllAppMgmtLinkResp {
+  CommonResp commonResp = 1;
+  repeated AppMgmtLink appMgmtLinks = 2;
+  int64 total = 3;
+}
+```
