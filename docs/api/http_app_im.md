@@ -66,3 +66,23 @@ message GetConvSettingResp {
   repeated ConvSetting convSettings = 2;
 }
 ```
+
+## 3. KeepAlive: 保活
+
+- 请求地址：`/v1/im/keepAlive`
+- 请求体：
+
+```protobuf
+message KeepAliveReq {
+  CommonReq commonReq = 1;
+  repeated string convIdList = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+message KeepAliveResp {
+  CommonResp commonResp = 1;
+}
+```
