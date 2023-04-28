@@ -69,7 +69,7 @@ message GetConvSettingResp {
 
 ## 3. KeepAlive: 保活
 
-- 请求地址：`/v1/im/keepAlive`
+- 请求地址：`/v1/im/white/keepAlive`
 - 请求体：
 
 ```protobuf
