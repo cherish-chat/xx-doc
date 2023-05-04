@@ -86,3 +86,26 @@ message KeepAliveResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 4. TranslateText: 翻译文本
+
+- 请求地址：`/v1/im/translateText`
+- 请求体：
+
+```protobuf
+message TranslateTextReq {
+  CommonReq commonReq = 1;
+  string q = 2; // 不能为空
+  string from = 3; // 不能为空 语言代码 支持的语言：https://docs.aws.amazon.com/translate/latest/dg/what-is-languages.html
+  string to = 4; // 不能为空
+}
+```
+
+- 响应体：
+
+```protobuf
+message TranslateTextResp {
+  CommonResp commonResp = 1;
+  string result = 2;
+}
+```
