@@ -109,3 +109,26 @@ message TranslateTextResp {
   string result = 2;
 }
 ```
+
+## 5. BatchTranslateText: 批量翻译文本
+
+- 请求地址：`/v1/im/batchTranslateText`
+- 请求体：
+
+```protobuf
+message BatchTranslateTextReq {
+  CommonReq commonReq = 1;
+  repeated string qList = 2; // 不能为空
+  string from = 3; // 不能为空 语言代码 支持的语言：https://docs.aws.amazon.com/translate/latest/dg/what-is-languages.html
+  repeated string toList = 4; // 不能为空
+}
+```
+
+- 响应体：
+
+```protobuf
+message BatchTranslateTextResp {
+  CommonResp commonResp = 1;
+  map<string, string> results = 2;
+}
+```
