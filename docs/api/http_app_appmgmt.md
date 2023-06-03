@@ -249,3 +249,53 @@ message GetAllAppMgmtLinkResp {
   int64 total = 3;
 }
 ```
+
+## 5. AppGetRichArticleList: 获取富文本文章列表
+
+- 请求地址：`/v1/appmgmt/appGetRichArticleList`
+- 请求体：
+
+```protobuf
+//AppGetRichArticleListReq app获取富文本文章列表
+message AppGetRichArticleListReq {
+  CommonReq commonReq = 1;
+  Page page = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+//AppMgmtRichArticle 富文本文章
+message AppMgmtRichArticle {
+  // 文章id
+  string id = 1;
+  // 文章标题
+  string title = 2;
+  // 富文本内容
+  string content = 3;
+  // 内容类型
+  string contentType = 4; // example: text/html; text/markdown; text/plain; application/json
+  // url地址
+  string url = 5;
+  // 是否启用
+  bool isEnable = 6;
+  // 创建时间
+  int64 createdAt = 7;
+  // 创建时间字符串
+  string createdAtStr = 8;
+  // 更新时间
+  int64 updatedAt = 9;
+  // 更新时间字符串
+  string updatedAtStr = 10;
+  // 排序
+  int32 sort = 11;
+}
+
+//AppGetRichArticleListResp app获取富文本文章列表
+message AppGetRichArticleListResp {
+  CommonResp commonResp = 1;
+  repeated AppMgmtRichArticle appMgmtRichArticles = 2;
+  int64 total = 3;
+}
+```
