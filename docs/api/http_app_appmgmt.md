@@ -322,3 +322,25 @@ message GetAppAddressBookResp {
   string addressBook = 2;
 }
 ```
+
+## 6. GetAppAddressBookUrl: 获取通讯录URL
+
+- 请求地址：`/v1/appmgmt/getAppAddressBookUrl`
+- 请求体：
+
+```protobuf
+//GetAppAddressBookUrlReq 获取通讯录
+message GetAppAddressBookUrlReq {
+  CommonReq commonReq = 1;
+}
+```
+
+- 响应体：
+
+```protobuf
+//GetAppAddressBookUrlResp 获取app通讯录
+message GetAppAddressBookUrlResp {
+  CommonResp commonResp = 1;
+  string url = 2;
+}
+```
