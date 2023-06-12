@@ -299,3 +299,26 @@ message AppGetRichArticleListResp {
   int64 total = 3;
 }
 ```
+
+
+## 6. GetAppAddressBook: 获取通讯录
+
+- 请求地址：`/v1/appmgmt/getAppAddressBook`
+- 请求体：
+
+```protobuf
+//GetAppAddressBookReq 获取通讯录
+message GetAppAddressBookReq {
+  CommonReq commonReq = 1;
+}
+```
+
+- 响应体：
+
+```protobuf
+//GetAppAddressBookResp 获取app通讯录
+message GetAppAddressBookResp {
+  CommonResp commonResp = 1;
+  string addressBook = 2;
+}
+```
