@@ -52,7 +52,7 @@ message GetMyGroupListReq {
     DEFAULT = 0;
     // 只获取id
     ONLY_ID = 1;
-    // ID+自己成员信息
+    // 群信息+自己成员信息
     WITH_MY_MEMBER_INFO = 2;
   }
   // 获取选项
