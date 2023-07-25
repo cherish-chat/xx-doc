@@ -240,6 +240,15 @@ message GetGroupHomeResp {
   int32 memberCount = 6;
   // 群介绍
   string introduction = 7;
+  // 群主id
+  string owner = 8;
+  int64 dismissTime = 9; // 解散时间 如果为0表示未解散 否则进入会话详情应该提示群已解散
+
+  // 群禁言
+  bool allMute = 11;
+  // 群禁止加好友
+  bool memberCanAddFriend = 12;
+
   // 成员统计
   message MemberStatistics {
     // 统计标题
