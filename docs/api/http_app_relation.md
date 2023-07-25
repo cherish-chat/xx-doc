@@ -132,13 +132,15 @@ message DeleteFriendResp {
 - 请求体：
 
 ```protobuf
+//GetFriendListReq 获取好友列表
 message GetFriendListReq {
-  Requester requester = 1;
+  CommonReq commonReq = 1;
   // 分页
   Page page = 2;
   enum Opt {
     WithBaseInfo = 0; // 带用户的基本信息
     OnlyId = 1; // 只有用户id
+    WithBaseInfoAndRemark = 2; // 带用户的基本信息和备注
   }
   Opt opt = 10;
 }
@@ -151,6 +153,7 @@ message GetFriendListResp {
   CommonResp commonResp = 1;
   repeated string ids = 2;
   map<string, UserBaseInfo> userMap = 3;
+  map<string, string> remarkMap = 4; // key: targetId(userId) value: remark
 }
 ```
 
@@ -202,5 +205,26 @@ message GetMyFriendEventListResp {
   CommonResp commonResp = 1;
   repeated FriendEvent friendNotifyList = 2;
   string pageIndex = 3; // 下次请求的pageIndex
+}
+```
+
+## 9. UpdateUserRemark: 更新用户备注
+
+- 请求地址：`/v1/relation/updateUserRemark`
+- 请求体：
+
+```protobuf
+//UpdateUserRemarkReq 更新好友备注
+message UpdateUserRemarkReq {
+  CommonReq commonReq = 1;
+  string targetId = 2;
+  string remark = 3;
+}
+```
+
+- 响应体：
+```protobuf
+message UpdateUserRemarkResp {
+  CommonResp commonResp = 1;
 }
 ```
