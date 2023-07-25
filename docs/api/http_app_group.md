@@ -52,6 +52,8 @@ message GetMyGroupListReq {
     DEFAULT = 0;
     // 只获取id
     ONLY_ID = 1;
+    // ID+自己成员信息
+    WITH_MY_MEMBER_INFO = 2;
   }
   // 获取选项
   Opt opt = 10;
@@ -61,6 +63,21 @@ message GetMyGroupListReq {
 - 响应体：
 
 ```protobuf
+message GroupMemberInfo {
+  // 群id
+  string groupId = 1;
+  // 群成员id
+  string memberId = 2;
+  // 群内显示的昵称
+  string remark = 3;
+  // 群角色
+  GroupRole role = 4;
+  // 解封时间
+  int64 unbanTime = 5;
+  // 用户基本信息
+  optional UserBaseInfo userBaseInfo = 11;
+}
+
 message GroupBaseInfo {
   string id = 1;
   string name = 2;
@@ -68,6 +85,11 @@ message GroupBaseInfo {
   string owner = 4;
 
   int64 dismissTime = 5; // 解散时间 如果为0表示未解散 否则进入会话详情应该提示群已解散
+
+  bool allMute = 11; // 是否全员禁言
+  bool memberCanAddFriend = 12; // 群成员是否可以加好友
+
+  optional GroupMemberInfo myMemberInfo = 31; // 自己在群里的信息
 }
 
 //GetMyGroupListResp 获取我的群聊列表
@@ -78,6 +100,7 @@ message GetMyGroupListResp {
   // ids
   repeated string ids = 3;
 }
+
 ```
 
 ## 3. SetGroupMemberInfo: 设置群成员信息
@@ -477,6 +500,10 @@ message EditGroupInfoReq {
   optional string avatar = 4;
   // 群介绍
   optional string introduction = 5;
+  // 群禁言
+  optional bool allMute = 11;
+  // 群禁止加好友
+  optional bool memberCanAddFriend = 12;
 }
 ```
 
