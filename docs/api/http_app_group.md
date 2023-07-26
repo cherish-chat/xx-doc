@@ -574,3 +574,36 @@ message InviteFriendToGroupResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 16. ResetGroupInfo: 重设群信息
+
+- 请求地址：`/v1/group/resetGroupInfo`
+- 请求体：
+
+```protobuf
+//ResetGroupInfoReq 编辑群资料
+message ResetGroupInfoReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群名称
+  string name = 3;
+  // 群头像
+  string avatar = 4;
+  // 群介绍
+  string introduction = 5;
+  // 群禁言
+  bool allMute = 11;
+  // 群禁止加好友
+  bool memberCanAddFriend = 12;
+}
+```
+
+- 响应体：
+
+```protobuf
+//EditGroupInfoResp 编辑群资料
+message EditGroupInfoResp {
+  CommonResp commonResp = 1;
+}
+```
