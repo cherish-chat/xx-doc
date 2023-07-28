@@ -440,3 +440,32 @@ message VerifyCaptchaCodeResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 18. GetUserWallet: 获取用户钱包
+
+- 请求地址：`/v1/user/getUserWallet`
+- 请求体：
+
+```protobuf
+//GetUserWalletReq 获取用户钱包请求
+message GetUserWalletReq {
+  CommonReq commonReq = 1;
+  string userId = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+message UserWallet {
+  string userId = 1;
+  int64 balance = 2;
+  int64 freezeBalance = 3;
+}
+
+//GetUserWalletResp 获取用户钱包响应
+message GetUserWalletResp {
+  CommonResp commonResp = 1;
+  UserWallet userWallet = 2;
+}
+```
