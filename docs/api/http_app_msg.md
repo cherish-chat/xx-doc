@@ -211,3 +211,102 @@ message EditMsgResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 7. sendRadPacket: 发送红包
+
+- 请求地址：`/v1/msg/sendRadPacket`
+- 请求体：
+
+```protobuf
+message RedPacket {
+  string redPacketId = 1;
+  string convId = 2;
+  string title = 3;
+  //红包类型
+  RedPacketType redPacketType = 4;
+  //红包个数
+  int32 count = 5;
+  //红包总金额 单位分 只有RedPacketType=Random_RedPacket时才有用
+  int64 totalAmount = 6;
+  //单个红包金额 单位分 只有RedPacketType=Normal_RedPacket时才有用
+  int64 singleAmount = 7;
+  //红包封面
+  string cover = 8;
+  //红包领取状态
+  RedPacketStatus redPacketStatus = 9;
+  //红包领取者
+  message Receiver {
+    string userId = 1;
+    int64 amount = 2;
+    int64 receiveTime = 3;
+    string avatar = 4;
+    string nickName = 5;
+  }
+  repeated Receiver receiverList = 10;
+  //红包发送时间
+  int64 sendTime = 11;
+  //红包过期时间
+  int64 expireTime = 12;
+}
+
+//SendRedPacketReq 发红包
+message SendRedPacketReq {
+  CommonReq commonReq = 1;
+  RedPacket redPacket = 2;
+}
+```
+
+- 响应体：
+
+```protobuf
+message SendRedPacketResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 8. receiveRedPacket: 领取红包
+
+- 请求地址：`/v1/msg/receiveRedPacket`
+- 请求体：
+
+```protobuf
+//ReceiveRedPacketReq 领取红包
+message ReceiveRedPacketReq {
+  CommonReq commonReq = 1;
+  string convId = 2;
+  string redPacketId = 3;
+  string serverMsgId = 4;
+}
+```
+
+- 响应体：
+
+```protobuf
+message ReceiveRedPacketResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 9. getRedPacketDetail: 获取红包详情
+
+- 请求地址：`/v1/msg/getRedPacketDetail`
+- 请求体：
+
+```protobuf
+//GetRedPacketDetailReq 获取红包详情
+message GetRedPacketDetailReq {
+  CommonReq commonReq = 1;
+  string convId = 2;
+  string redPacketId = 3;
+}
+
+```
+
+- 响应体：
+
+```protobuf
+message GetRedPacketDetailResp {
+  CommonResp commonResp = 1;
+  RedPacket redPacket = 2;
+}
+```
