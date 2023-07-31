@@ -212,9 +212,9 @@ message EditMsgResp {
 }
 ```
 
-## 7. sendRadPacket: 发送红包
+## 7. sendRedPacket: 发送红包
 
-- 请求地址：`/v1/msg/sendRadPacket`
+- 请求地址：`/v1/msg/sendRedPacket`
 - 请求体：
 
 ```protobuf
