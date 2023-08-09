@@ -607,3 +607,86 @@ message EditGroupInfoResp {
   CommonResp commonResp = 1;
 }
 ```
+
+## 17. SearchGroupMember: 搜索群成员
+
+- 请求地址：`/v1/group/searchGroupMember`
+- 请求体：
+
+```protobuf
+//SearchGroupMemberReq 搜索群成员
+message SearchGroupMemberReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 关键词
+  string keyword = 3;
+  // 或在userIds中搜索
+  repeated string orInUserIds = 4;
+  // 分页
+  Page page = 5;
+}
+```
+
+- 响应体：
+
+```protobuf
+//SearchGroupMemberResp 搜索群成员
+message SearchGroupMemberResp {
+  CommonResp commonResp = 1;
+  // 群成员列表
+  repeated GroupMemberInfo groupMemberList = 2;
+}
+```
+
+## 18. BanGroupMember: 禁言群成员
+
+- 请求地址：`/v1/group/banGroupMember`
+- 请求体：
+
+```protobuf
+//BanGroupMemberReq 禁言群成员
+message BanGroupMemberReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  string memberId = 3;
+  // 解除禁言时间
+  int64 unbanTime = 4;
+}
+```
+
+- 响应体：
+
+```protobuf
+//BanGroupMemberResp 禁言群成员
+message BanGroupMemberResp {
+  CommonResp commonResp = 1;
+}
+```
+
+## 19. UnbanGroupMember: 解除禁言群成员
+
+- 请求地址：`/v1/group/unbanGroupMember`
+- 请求体：
+
+```protobuf
+//UnbanGroupMemberReq 解除禁言群成员
+message UnbanGroupMemberReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  string memberId = 3;
+}
+```
+
+- 响应体：
+
+```protobuf
+//UnbanGroupMemberResp 解除禁言群成员
+message UnbanGroupMemberResp {
+  CommonResp commonResp = 1;
+}
+```
