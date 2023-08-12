@@ -690,3 +690,30 @@ message UnbanGroupMemberResp {
   CommonResp commonResp = 1;
 }
 ```
+
+// 20. SetGroupMemberRole: 设置群成员角色
+
+- 请求地址：`/v1/group/setGroupMemberRole`
+- 请求体：
+
+```protobuf
+//SetGroupMemberRoleReq 设置群成员角色
+message SetGroupMemberRoleReq {
+  CommonReq commonReq = 1;
+  // 群ID
+  string groupId = 2;
+  // 群成员ID
+  string memberId = 3;
+  // 群角色
+  GroupRole role = 4;
+}
+```
+
+- 响应体：
+
+```protobuf
+//SetGroupMemberRoleResp 设置群成员角色
+message SetGroupMemberRoleResp {
+  CommonResp commonResp = 1;
+}
+```
